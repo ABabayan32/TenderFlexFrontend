@@ -1,5 +1,7 @@
 
 <script>
+import router from "@/router";
+import {getHeaders} from "@/static_functions";
 
 export default {
   data() {
@@ -8,34 +10,57 @@ export default {
       password: ''
     }
   },
+
   methods: {
-    onLogin() {
-      fetch('http://localhost:8080/login', {
+
+    Login() {
+      let details = {
+        'username': this.login,
+        'password': this.password,
+      };
+
+      let formBody = [];
+      for (let property in details) {
+        let encodedKey = property;
+        let encodedValue = details[property];
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+      fetch('http://localhost:8080/login?'+formBody, {
             method: 'POST',
             node: 'cors',
             cache: 'no-cache',
             credentials: 'same-origin',
-            headers: {
-              "Access-Control-Allow-Origin": "*", 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'},
-            params: { username: this.login, password: this.password
-            }
+            headers: getHeaders(),
           })
           .then((response) => {
-              this.$cookie.set('access_token', response.data['access_token']);
-              if (response.data['role'] != null) {
-                this.$cookie.set('role', response.data['role']);
-
+            if (response.ok) {
+             return response.json()}}
+          ).then(resp=>{
+              this.$cookies.set('access_token', resp['access_token']);
+              if (resp['role'] != null) {
+                this.$cookies.set('role', resp['role']);
+                router.replace("/contractorHome");
               }
   }) } }
 }
 </script>
 
+
+
 <template>
 
-  <div>
+  <span class='loginIcon tenderFlexIcon'></span>
+  <div class="rcorners1 loginForm" style="background-color: white">
     <p>Log in to proceed</p>
-    <input v-model="login" placeholder="login" />
-    <input type="password" v-model="password" placeholder="password" />
-    <button @click="onLogin">Login</button>
+    <input class="rcorners1" v-model="login" placeholder="login" />
+    <input class="rcorners1" type="password" v-model="password" placeholder="password" />
+    <button class="rcorners1 loginButton" @click="Login">Login</button>
   </div>
+
 </template>
+
+<style scoped>
+@import "@/assets/main.css";
+@import "@/components/login.css";
+</style>
