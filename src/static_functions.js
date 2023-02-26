@@ -1,3 +1,4 @@
+import router from "@/router";
 
 
 export function getHeaders() {
@@ -5,13 +6,20 @@ export function getHeaders() {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'}
 }
+
 export function getAuthenticatedHeaders () {
-    const defaultHeaders = getHeaders();
-    defaultHeaders["Authorization"] = getCookie("access_token");
    return {
        ...getHeaders(),
-       Authorization: this.$cookies('access_token')
+       Authorization: 'Bearer '+ $cookies.get('access_token')
    };
+
+
+}
+
+export function logout() {
+    $cookies.remove('access_token');
+    $cookies.remove('role');
+    router.replace('/login');
 }
 
 

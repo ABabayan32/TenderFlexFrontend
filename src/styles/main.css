@@ -1,6 +1,6 @@
 
 .tenderFlexIcon {
-  background: url('src/assets/icons/TenderFlex -- Logo.png');
+  background: url('@/assets/icons/TenderFlex -- Logo.png');
   display: block;
   background-size: 300px;
   width: 300px;
