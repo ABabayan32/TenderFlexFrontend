@@ -61,6 +61,6 @@ export default {
 </template>
 
 <style scoped>
-@import "@/assets/main.css";
-@import "@/components/login.css";
+@import "@/styles/main.css";
+@import "@/styles/login.css";
 </style>

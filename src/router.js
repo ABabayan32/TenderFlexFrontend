@@ -14,10 +14,11 @@ const routes =[
         component: ContractorHome,
     } ,
     {
-        path: '/tenders',
+        path: '/createTender',
         name: 'createTender',
         component: CreateTender,
     }
+
 ];
 
 const router = createRouter({
