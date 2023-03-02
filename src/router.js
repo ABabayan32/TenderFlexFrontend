@@ -1,7 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router';
-import Login from "@/views/Login.vue";
-import CreateTender from "@/views/CreateTender.vue";
-import ContractorHome from "@/views/ContractorHome.vue";
+import Login from "@/views/Login/Login.vue";
+import CreateTender from "@/views/CreateTender/CreateTender.vue";
+import ContractorHome from "@/views/ContractorHome/ContractorHome.vue";
 const routes =[
     {
         path: '/login',
@@ -10,12 +10,12 @@ const routes =[
     },
     {
         path: '/contractorHome',
-        name: 'contractorHome',
+        name: 'contractor-home',
         component: ContractorHome,
     } ,
     {
         path: '/createTender',
-        name: 'createTender',
+        name: 'create-tender',
         component: CreateTender,
     }
 

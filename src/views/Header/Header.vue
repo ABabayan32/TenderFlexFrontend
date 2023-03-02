@@ -1,7 +1,8 @@
 
 
 <script>
-import {getAuthenticatedHeaders,logout} from "@/static_functions";
+import {getAuthenticatedHeaders,logout} from "@/common_functions";
+import {API_BASE_URL} from "@/const_config.js";
 export default {
   emits: ['tendersOpen', 'offersOpen', 'newTenderOpen'],
   data() {
@@ -11,8 +12,8 @@ export default {
       offerCount: 0,
     }
   },
-  async beforeCreate() {
-    this.tenderCount = await fetch('http://localhost:8080/tenders/me/count',{
+  async beforeMount() {
+    this.tenderCount = await fetch(API_BASE_URL + '/tenders/me/count',{
       method: 'GET',
       node: 'cors',
       cache: 'no-cache',
@@ -31,7 +32,7 @@ export default {
     {
       return response;
     });
-    this.offerCount = await fetch('http://localhost:8080/tenders/me/offers/count',{
+    this.offerCount = await fetch(API_BASE_URL + '/tenders/me/offers/count',{
       method: 'GET',
           node: 'cors',
           cache: 'no-cache',
@@ -43,8 +44,7 @@ export default {
           if (response.ok) {
             return response.json()
           } else if(response.status === 401 || response.status === 403){
-            logout()
-            return null;
+            logout();
           }
         }
         )
@@ -74,21 +74,29 @@ export default {
 
 <template>
   <header>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </header>
   <div class="header">
     <div class="iconContainer">
       <div class='tenderFlexIcon headerIcon'></div>
     </div>
+
     <div class="tendersButtonContainer">
-      <button @click="onTendersClick" class="tendersButton"><i style="color:white;" class="fa fa-heartbeat"></i> Tenders <span class="tenderCount">{{tenderCount}}</span></button> </div>
+      <button @click="onTendersClick" class="tendersButton"><button class="tendersButton"></button>
+        <v-icon icon="fa fa-heartbeat" />
+        Tenders <span class="tenderCount">{{tenderCount}}</span></button> </div>
+
     <div class="offersButtonContainer">
-      <button @click="onOffersClick" class="offersButton"><i class="fa fa-commenting-o"></i> Offers<span class="offerCount">{{offerCount}}</span></button> </div>
+      <button @click="onOffersClick" class="offersButton"><button class="offersButton"></button>
+        <v-icon icon="fa fa-heartbeat" />
+        Offers<span class="offerCount">{{offerCount}}</span></button> </div>
+
+
     <div class="exitButtonContainer">
-      <button @click="onLogout" class="exitButton"><i style="color:white;" class="fa fa-sign-out"></i></button>
+      <button @click="onLogout" class="exitButton"><button class="offersButton"></button>
+        <v-icon icon="fa fa-sign-out" /></button>
     </div>
     <div @click="onCreateNewTender" class="createButtonContainer">
-      <button class="createButton"><i style="color:white; font-size: 13px; margin-right: 3px" class="fa fa-plus"></i>Create new tender</button>
+      <button class="createButton"><v-icon icon="fa fa-plus" />Create new tender</button>
     </div>
   </div>
 
@@ -98,7 +106,7 @@ export default {
 </template>
 
 <style>
-@import "@/styles/header.css";
+@import "@/views/Header/header.css";
 @import "@/styles/main.css";
 </style>
 
