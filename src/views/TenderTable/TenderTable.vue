@@ -1,7 +1,7 @@
 <template>
-  <div class="tableHeaderContainer"></div>
-  <div class="tenderTable">
-    <div class="tableTitle">
+  <div class="table-header-container"></div>
+  <div class="tender-table">
+    <div class="table-title">
       <h1> My Tenders</h1>
     </div>
     <table style="width: 100%;" v-if="tenders.length !==0">
@@ -33,7 +33,7 @@
         <td style="width: 20%;text-align: center; color: #42474d">{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
         <td style="width: 20%;text-align: center; color: #42474d">{{tender['deadForSinging'] ? formatDate(tender['deadForSinging']) : ''}}</td>
         <td style="width: 10%;text-align: center; color: #42474d"><button @click="onTenderOffersClick(tender)"
-                                                                          class="offerButton rcorners1" type="button" >
+                                                                          class="offer-button rcorners1" type="button" >
           {{responseDate(tender, offers)}}</button></td>
       </tr>
       </tbody>
@@ -41,14 +41,13 @@
     <v-pagination
         :disabled = "tenders.length === 0"
         v-model="page"
-        :length="(tenderCount%count !== 0) ? tenderCount/count+1 : tenderCount/count"
+        :length="pageCount"
         :showFirstLastPage="true"
         :size="count"
         @update:modelValue="pageChange()"
     ></v-pagination>
-    <div class="blankT
-    able" v-if="tenders.length ===0">
-      <div class="noTenders">There are no Tenders</div>
+    <div class="blank-table" v-if="tenders.length ===0">
+      <div class="no-tenders">There are no Tenders</div>
     </div>
   </div>
 
@@ -57,6 +56,8 @@
 <script>
 import {getAuthenticatedHeaders, logout} from "@/common_functions";
 import {API_BASE_URL} from "@/const_config.js";
+import {computed} from "vue";
+
 
 export default {
   emits: ['offersForTender'],
@@ -66,11 +67,16 @@ export default {
       page: 1,
       tenderCount: 0,
       offers: [],
-      tenders: []
+      tenders: [],
     }
   },
+  computed: {
+    pageCount () {
+      return (this.tenderCount%this.count !== 0) ? this.tenderCount/this.count+1 : this.tenderCount/this.count}
+  },
   async beforeMount() {
-    this.tenders = await fetch(API_BASE_URL+ '/tenders/me?page=' + (this.page-1)+'&count='+this.count, {
+    try{
+      this.tenders = await fetch(API_BASE_URL+ '/tenders/me?page=' + (this.page-1)+'&count='+this.count, {
       method: 'GET',
       node: 'cors',
       cache: 'no-cache',
@@ -88,6 +94,8 @@ export default {
         .then(response => {
           return response;
         });
+
+
     this.tenderCount = await fetch(API_BASE_URL+'/tenders/me/count', {
       method: 'GET',
           node: 'cors',
@@ -122,7 +130,9 @@ export default {
     )
         .then(response => {
           return response;
-        });
+        }); } catch (error){
+      console.error(error);
+    }
   },
 
   methods: {
@@ -171,7 +181,7 @@ export default {
 
     },
     responseDate(tender, offers) {
-      let id = +tender['id'];
+      let id = Number(tender['id']);
       return offers.filter(offer => +offer['tenderId'] === id).length;
     },
     onTenderOffersClick(tender) {
@@ -183,6 +193,69 @@ export default {
 </script>
 
 <style scoped>
-@import "@/views/TenderTable/tenderTable.css";
+.tender-table{
+  margin-top: -9.6rem;
+  padding-left: 20%;
+  width: 60%;
+}
+
+.table-header-container {
+  height: 8.6875rem;
+  width: 101.2%;
+  margin-left: -0.5rem;
+  margin-top: 5.125rem;
+  border-color: #ffffff;
+  background-color: #27aae1;
+}
+
+table  {
+  border-spacing: 0;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+.blank-table {
+  width: 100%;
+  background-color: #ffffff;
+  height: 15rem;
+}
+
+.no-tenders {
+  text-align: center;
+  font-size: 1.875rem;
+  padding: 6.25rem;
+}
+
+tbody>tr {
+  height: 5rem;
+  border: solid gray;
+  border-width: 0.0625rem 0 ;
+}
+
+thead{
+  background-color: #1a4583;
+  border-color: #0a50ad;
+  color: #ffffff;
+  height: 1.875rem;
+}
+
+.table-title {
+  font-size: 1.5625rem;
+  color: #ffffff;
+}
+
+.offer-button {
+  background-color: #e0e8ec;
+  border: none;
+  color: #2f3234;
+  padding: 0.9375rem 2rem;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  font-size: 1rem;
+  margin: 0.25rem 0.125rem;
+  cursor: pointer;
+}
+
 
 </style>
