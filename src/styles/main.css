@@ -1,12 +1,4 @@
 
-.tenderFlexIcon {
-  background: url('@/assets/icons/logo.png');
-  display: block;
-  background-size: 18.75rem;
-  width: 18.75rem;
-  height: 3.6875rem;
-  border: 0.0625rem solid white;
-}
 
 .rcorners1 {
   border-radius: 0.9375rem;
@@ -23,7 +15,7 @@
   padding: 0.5rem;
   margin-top: 1.4375rem;
   margin-left: 0.625rem;
-  color: white;
+  color: #ffffff;
   text-align: center;
   text-decoration: none;
 }
