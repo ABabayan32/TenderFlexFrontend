@@ -1,0 +1,63 @@
+.tenderTable{
+    margin-top: -155px;
+    padding-left: 20%;
+    width: 60%;
+}
+
+.tableHeaderContainer {
+    height: 139px;
+    width: 101.2%;
+    margin-left: -8px;
+    margin-top: 82px;
+    border-color: white;
+    background-color: #27aae1;
+}
+
+table  {
+    border-spacing: 0;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.blankTable {
+    width: 100%;
+    background-color: white;
+    height: 240px;
+}
+
+.noTenders {
+    text-align: center;
+    font-size: 30px;
+    padding: 100px;
+}
+
+tbody>tr {
+    height: 80px;
+    border: solid gray;
+    border-width: 1px 0 ;
+}
+
+thead{
+    background-color: #1a4583;
+    border-color: #0a50ad;
+    color: white;
+    height: 30px;
+}
+
+.tableTitle {
+    font-size: 25px;
+    color: white;
+}
+
+.offerButton {
+    background-color: #e0e8ec; /* Green */
+    border: none;
+    color: #2f3234;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}

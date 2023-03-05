@@ -1,8 +1,8 @@
 
 <script>
 import router from "@/router";
-import {getHeaders} from "@/static_functions";
-
+import {getHeaders} from "@/common_functions";
+import {API_BASE_URL} from "@/const_config.js";
 export default {
   data() {
     return {
@@ -26,7 +26,7 @@ export default {
         formBody.push(encodedKey + "=" + encodedValue);
       }
       formBody = formBody.join("&");
-      fetch('http://localhost:8080/login?'+formBody, {
+      fetch(API_BASE_URL+'/login?'+formBody, {
             method: 'POST',
             node: 'cors',
             cache: 'no-cache',
@@ -62,5 +62,5 @@ export default {
 
 <style scoped>
 @import "@/styles/main.css";
-@import "@/styles/login.css";
+@import "@/views/Login/login.css";
 </style>
