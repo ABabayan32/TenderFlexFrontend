@@ -50,17 +50,62 @@ export default {
 
 <template>
 
-  <span class='loginIcon tenderFlexIcon'></span>
-  <div class="rcorners1 loginForm" style="background-color: white">
+  <span class='login-icon tender-flex-icon'></span>
+  <div class="rcorners1 login-form" style="background-color: white">
     <p>Log in to proceed</p>
     <input class="rcorners1" v-model="login" placeholder="login" />
     <input class="rcorners1" type="password" v-model="password" placeholder="password" />
-    <button class="rcorners1 loginButton" @click="Login">Login</button>
+    <button class="rcorners1 login-button" @click="Login">Login</button>
   </div>
 
 </template>
 
 <style scoped>
 @import "@/styles/main.css";
-@import "@/views/Login/login.css";
+.login-form {
+  position: fixed;
+  top: 26%;
+  left: 36%;
+  height: 400px;
+  width: 400px;
+}
+
+.login-button {
+  width: 90%;
+  background-color: #27aae1;
+  color: #ffffff;
+  padding: 14px 20px;
+  margin: 5%;
+  cursor: pointer;
+  height: 60px;
+}
+
+input {
+  height: 60px;
+  width: 90%;
+  padding: 12px 20px;
+  margin: 5%;
+  display: flex;
+  box-sizing: border-box;
+}
+
+p {
+  text-align: center;
+  margin-top: 10%;
+}
+
+.login-icon {
+  position: fixed;
+  top: 15%;
+  left: 38%;
+}
+
+.tender-flex-icon {
+  background: url('@/assets/icons/logo.png');
+  display: block;
+  background-size: 18.75rem;
+  width: 18.75rem;
+  height: 3.6875rem;
+  border: 0.0625rem solid white;
+}
 </style>
