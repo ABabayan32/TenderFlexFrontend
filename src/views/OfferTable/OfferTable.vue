@@ -2,35 +2,39 @@
   <div class="offer-header-container"></div>
   <div class="offer-table">
     <div class="table-title">
-      <h1> My Offers</h1>
+      <h1> Offers</h1>
     </div>
-    <table style="width: 100%;" v-if="offers.length !==0 ">
+    <table style="width: 150%;" v-if="offers.length !==0 ">
       <thead>
       <tr>
         <th>
-          Official Name <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          OFFICIAL NAME <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Field <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          FIELD <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Price <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          PRICE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Sent Date <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          COUNTRY <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Status <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          RECIEVED DATE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        </th>
+        <th>
+          STATUS <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
       </tr>
       </thead>
       <tbody>
       <tr  v-for="offer in offers" :key='offer'>
-        <td style="width: 30%;text-align: center; color: black">{{offer['officialName']}}</td>
-        <td style="width: 20%;text-align: center; color: #42474d">Field</td>
+        <td style="width: 20%;text-align: center; color: #42474d">{{offer['officialName']}}</td>
+        <td style="width: 30%;text-align: center; color: #42474d">{{offer['country']}}</td>
+        <td style="width: 10%;text-align: center; color: #42474d">Field</td>
         <td style="width: 20%;text-align: center; color: #42474d">{{offer['bidPrice']}}</td>
-        <td style="width: 20%;text-align: center; color: #42474d">{{offer['offerDate'] ? formatDate(offer['offerDate']) : ''}}</td>
-        <td style="width: 10%;text-align: center; color: #42474d">{{offer['offerStatus'] ? offer['offerStatus'].nameCt : ''}}</td>
+        <td style="width: 30%;text-align: center; color: #42474d">{{offer['offerDate'] ? formatDate(offer['offerDate']) : ''}}</td>
+        <td style="min-width: 30%;text-align: center; color: #42474d">{{offer['offerStatus'] ? offer['offerStatus'].nameCt : ''}}</td>
       </tr>
       </tbody>
     </table>
@@ -165,14 +169,14 @@ export default {
 
 <style >
 .offer-table{
-  margin-top: -9.6rem;
+  margin-top: -5.6rem;
   padding-left: 20%;
   width: 60%;
 }
 
 .offer-header-container {
-  height: 8.6875rem;
-  width: 101.2%;
+  height: 10.6875rem;
+  max-width: 101.2%;
   margin-left: -0.5rem;
   margin-top: 5.125rem;
   border-color: #ffffff;
@@ -186,7 +190,7 @@ table  {
 }
 
 .blank-table {
-  width: 100%;
+  max-width: 100%;
   background-color: #ffffff;
   height: 15rem;
 }

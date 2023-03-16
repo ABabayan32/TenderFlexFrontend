@@ -4,33 +4,34 @@
     <div class="table-title">
       <h1> My Tenders</h1>
     </div>
-    <table style="width: 100%;" v-if="tenders.length !==0">
+    <table style="width: 150%;" v-if="tenders.length !==0">
       <thead>
       <tr>
 
         <th>
-          Field <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          FIELD <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Official Name <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          OFFICIAL NAME <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Status <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          STATUS <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Deadline <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          DEADLINE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          Offers <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          OFFERS <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
       </tr>
       </thead>
       <tbody>
 
       <tr  v-for="tender in tenders" :key='tender'>
-        <td style="width: 30%;text-align: center; color: black">{{tender['awardFileKey']}}</td>
-        <td style="width: 20%;text-align: center; color: #42474d">{{tender['name']}}</td>
-        <td style="width: 20%;text-align: center; color: #42474d">{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
+        <td style="width: 30%;text-align: center; color: #068ac2"><a @click="onTenderFieldClick(tender)" type="button" >
+          {{tender['cpv'] ? tender['cpv']['name']+'/'+tender['cpv']['field'] : ''}}</a></td>
+        <td style="width: 30%;text-align: center; color: #42474d">{{tender['name']}}</td>
+        <td style="width: 20%;text-align: center; color: #6de165">{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
         <td style="width: 20%;text-align: center; color: #42474d">{{tender['deadForSinging'] ? formatDate(tender['deadForSinging']) : ''}}</td>
         <td style="width: 10%;text-align: center; color: #42474d"><button @click="onTenderOffersClick(tender)"
                                                                           class="offer-button rcorners1" type="button" >
@@ -45,7 +46,7 @@
         :showFirstLastPage="true"
         :size="count"
         @update:modelValue="pageChange()"
-    ></v-pagination>
+    ></v-pagination> <div class="v-pagination_list"></div>
     <div class="blank-table" v-if="tenders.length ===0">
       <div class="no-tenders">There are no Tenders</div>
     </div>
@@ -60,7 +61,7 @@ import {computed} from "vue";
 
 
 export default {
-  emits: ['offersForTender'],
+  emits: ['offersForTender','desOfTender'],
   data() {
     return {
       count: 5,
@@ -177,7 +178,7 @@ export default {
     formatDate(miliseconds) {
       let d = new Date(miliseconds);
       return ("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" +
-          d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+          d.getFullYear() ;
 
     },
     responseDate(tender, offers) {
@@ -187,6 +188,9 @@ export default {
     onTenderOffersClick(tender) {
       this.$emit("offersForTender", tender);
     },
+    onTenderFieldClick(tender) {
+      this.$emit("desOfTender", tender);
+    },
 
   }
 }
@@ -194,14 +198,14 @@ export default {
 
 <style scoped>
 .tender-table{
-  margin-top: -9.6rem;
+  margin-top: -5.6rem;
   padding-left: 20%;
-  width: 60%;
+  max-width: 60%;
 }
 
 .table-header-container {
-  height: 8.6875rem;
-  width: 101.2%;
+  height: 10.6875rem;
+  max-width: 101.2%;
   margin-left: -0.5rem;
   margin-top: 5.125rem;
   border-color: #ffffff;
@@ -215,7 +219,7 @@ table  {
 }
 
 .blank-table {
-  width: 100%;
+  max-width: 100%;
   background-color: #ffffff;
   height: 15rem;
 }
@@ -256,6 +260,13 @@ thead{
   margin: 0.25rem 0.125rem;
   cursor: pointer;
 }
+.v-pagination_list {
+  display: inline-flex;
+  list-style-type: none;
+  justify-content: center;
+  width: 150%;
+}
 
 
-</style>
+
+ </style>
