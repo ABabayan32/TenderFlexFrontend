@@ -1,7 +1,8 @@
 <template>
-  <div class="offer-header-container"></div>
-  <div class="offer-table">
-    <div class="table-title">
+  <div v-if="!tender" class="offer-header-container"></div>
+
+  <div :class="{ 'offer-table': !tender }" class="offer-table-with">
+    <div v-if="!tender" class="table-title">
       <h1> Offers</h1>
     </div>
     <table style="width: 150%;" v-if="offers.length !==0 ">
@@ -11,16 +12,13 @@
           OFFICIAL NAME <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          FIELD <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
-        </th>
-        <th>
           PRICE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
           COUNTRY <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
-          RECIEVED DATE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+          RECEIVED DATE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
         <th>
           STATUS <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
@@ -29,17 +27,20 @@
       </thead>
       <tbody>
       <tr  v-for="offer in offers" :key='offer'>
-        <td style="width: 20%;text-align: center; color: #42474d">{{offer['officialName']}}</td>
-        <td style="width: 30%;text-align: center; color: #42474d">{{offer['country']}}</td>
-        <td style="width: 10%;text-align: center; color: #42474d">Field</td>
-        <td style="width: 20%;text-align: center; color: #42474d">{{offer['bidPrice']}}</td>
-        <td style="width: 30%;text-align: center; color: #42474d">{{offer['offerDate'] ? formatDate(offer['offerDate']) : ''}}</td>
-        <td style="min-width: 30%;text-align: center; color: #42474d">{{offer['offerStatus'] ? offer['offerStatus'].nameCt : ''}}</td>
+        <td v-if="!!tender" style="width: 20%;text-align: center;color: #3895bd">
+          <a @click="openOfferDescription(offer)" type="button" >{{offer['name']}}</a></td>
+        <td v-if="!tender" style="width: 20%;text-align: center; color: #42474d">{{offer['name']}}</td>
+        <td style="width: 20%;text-align: center; color: #42474d">{{getCurrencyById(offer['currencyId'])+ " " + offer['bidPrice']}}</td>
+        <td style="width: 15%;text-align: center; color: #42474d">{{getCountryById(offer['countryId'])}}</td>
+        <td style="width: 15%;text-align: center; color: #42474d">{{offer['offerDate'] ? formatDate(offer['offerDate']) : ''}}</td>
+        <td style="width: 30%;text-align: center; color: #42474d"
+            :class="{ green: offer['offerStatus'].id === 3, red: offer['offerStatus'].id === 5,
+             grey: offer['offerStatus'].id === 4, blue: offer['offerStatus'].id === 2}">{{
+            offer['offerStatus'] ? (isBidder ? offer['offerStatus'].nameBr : offer['offerStatus'].nameCt) : ''}}</td>
       </tr>
       </tbody>
     </table>
-    <v-pagination
-        :disabled = "offers.length === 0"
+    <v-pagination v-if="offers.length !== 0"
         v-model="page"
         :length="pageCount"
         :showFirstLastPage="true"
@@ -47,24 +48,28 @@
         @update:modelValue="pageChange()"
     ></v-pagination>
 
-
-    <div class="blank-table" v-if="offers.length === 0">
-      <div class="no-offers">There are no sent offers</div>
-    </div>
+  </div>
+  <div class="blank-table" :class="{ 'blank-table-width': !tender }"  v-if="offers.length === 0">
+    <div class="no-offers">There are no sent offers</div>
   </div>
 
 </template>
 
 <script>
-import {getAuthenticatedHeaders,logout} from "@/common_functions";
+import {formatDate, getAuthenticatedHeaders, logout} from "@/utils";
 import {API_BASE_URL} from "@/const_config.js";
+import router from "@/router";
+import {el} from "vuetify/locale";
 export default {
-    props: ['tender'],
+  emits: ['offerDescriptionOpen'],
+    props: ['tender', 'baseUrl', 'isBidder'],
     data() {
       return {
         countPerPage: 5,
         offersCount: 0,
         offers: [],
+        countries:[],
+        currencies:[],
         page: 1
       }
     },
@@ -73,28 +78,13 @@ export default {
           return (this.offersCount%this.countPerPage !== 0) ? this.offersCount/this.countPerPage+1 : this.offersCount/this.countPerPage}
       },
     async beforeMount() {
+      let url;
       if(this.tender){
-        this.offers = await fetch (API_BASE_URL+ '/tenders/'+this.tender.id+'/offers', {
-          method: 'GET',
-          node: 'cors',
-          cache: 'no-cache',
-          credentials: 'same-origin',
-          headers: getAuthenticatedHeaders(),
-        })
-            .then((response) => {
-                  if (response.ok) {
-                    return response.json()
-                  } else if(response.status === 401 || response.status === 403){
-                    logout();
-
-                  }
-                }
-            )
-            .then(response => {
-              return response;
-            });
+        url = API_BASE_URL+ '/tenders/'+this.tender.id+'/offers';
       } else {
-        this.offers = await fetch(API_BASE_URL +'/tenders/me/offers?page='+(this.page-1)+'&count='+this.countPerPage,
+        url = API_BASE_URL + this.baseUrl;
+      }
+        this.offers = await fetch(url + '?page='+(this.page-1)+'&count='+this.countPerPage,
             {
               method: 'GET',
               node: 'cors',
@@ -114,8 +104,33 @@ export default {
             .then(response => {
               return response;
             });
-      }
-      this.offersCount = await fetch (API_BASE_URL +'/tenders/me/offers/count', {
+      this.currencies = await fetch(API_BASE_URL+'/currencies',{
+        headers: getAuthenticatedHeaders()
+      }).then((response) => {
+            if (response.ok) {
+              return response.json()
+            } else if (response.status === 401 || response.status === 403) {
+              logout();
+            }
+          }
+      )
+          .then(response => {
+            return response;
+          });
+      this.countries = await fetch(API_BASE_URL+'/countries', {
+        headers: getAuthenticatedHeaders()
+      }).then((response) => {
+            if (response.ok) {
+              return response.json()
+            } else if (response.status === 401 || response.status === 403) {
+              logout();
+            }
+          }
+      )
+          .then(response => {
+            return response;
+          });
+      this.offersCount = await fetch (url + '/count', {
         method: 'GET',
         node: 'cors',
         cache: 'no-cache',
@@ -135,8 +150,17 @@ export default {
           });
     },
     methods: {
+      openOfferDescription(offer){
+        this.$emit("offerDescriptionOpen", offer);
+      },
       async pageChange(){
-        this.offers = await fetch(API_BASE_URL+'/tenders/offers/me?page=' + (this.page-1)+'&count='+this.countPerPage, {
+        let url;
+        if(!!this.tender){
+          url = API_BASE_URL+ '/tenders/'+this.tender.id+'/offers'
+        } else {
+          url = API_BASE_URL+ this.baseUrl
+        }
+        this.offers = await fetch(url + '?page=' + (this.page-1)+'&count='+this.countPerPage, {
           method: 'GET',
           node: 'cors',
           cache: 'no-cache',
@@ -155,10 +179,23 @@ export default {
             });
 
       },
+      getCountryById(id){
+        let country;
+        if(id) {
+          country = this.countries.find(country => country.countryId === id);
+        }
+        return !!country ? country.name : "";
+      },
+      getCurrencyById(id){
+        let currency
+        if(id) {
+          currency = this.currencies.find(currency => currency.currencyId === id);
+        }
+        return !!currency ? currency.name : "";
+      },
       formatDate(miliseconds) {
         let d = new Date(miliseconds);
-        return ("0" + d.getDate()).slice(-2) + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" +
-            d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+        return formatDate(d);
 
       }
     }
@@ -169,8 +206,11 @@ export default {
 
 <style >
 .offer-table{
-  margin-top: -5.6rem;
+  margin-top: -6.567rem;
   padding-left: 20%;
+}
+
+.offer-table-with {
   width: 60%;
 }
 
@@ -194,6 +234,12 @@ table  {
   background-color: #ffffff;
   height: 15rem;
 }
+
+.blank-table-width {
+  margin-left: 20%;
+  width: 60%;
+}
+
 .no-offers {
   text-align: center;
   font-size: 1.875rem;
@@ -216,6 +262,18 @@ thead{
 .table-title {
   font-size: 1.5625rem;
   color: #ffffff;
+}
+.green {
+  color: #13c206 !important;
+}
+.blue {
+  color: #27aae1 !important;
+}
+.red {
+  color: firebrick !important;
+}
+.grey {
+  color: #646b70 !important;
 }
 
 
