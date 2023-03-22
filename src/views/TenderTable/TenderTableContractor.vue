@@ -43,7 +43,7 @@
     </table>
     <div>
       <v-pagination
-          class="my-4"
+
           :disabled = "tenders.length === 0"
           v-model="page"
           :length="pageCount"
@@ -52,8 +52,6 @@
           lastIcon="fa fa-angle-double-right"
           next-icon="fa fa-angle-right"
           prev-icon="fa fa-angle-left"
-          :show-first-last-page="false"
-          rounded="cycle"
           :size="count"
           @update:modelValue="pageChange()"/>
     </div>
@@ -205,6 +203,7 @@ export default {
 </script>
 
 <style scoped>
+.
 .uppercase{
   text-transform: uppercase;
 

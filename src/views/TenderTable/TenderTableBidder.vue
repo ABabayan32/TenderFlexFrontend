@@ -40,6 +40,10 @@
         :disabled = "tenders.length === 0"
         v-model="page"
         :length="pageCount"
+        firstIcon="fa fa-angle-double-left"
+        lastIcon="fa fa-angle-double-right"
+        next-icon="fa fa-angle-right"
+        prev-icon="fa fa-angle-left"
         :showFirstLastPage="true"
         :size="count"
         @update:modelValue="pageChange()"
@@ -145,6 +149,7 @@ export default {
 
 <style scoped>
 
+
 .column-small {
   width:30%;
   text-align: center;
@@ -210,7 +215,11 @@ thead{
   justify-content: center;
   width: 150%;
 }
-
+.v-pagination__item--is-active {
+  border-radius: 0px;
+  position: static !important;
+  background-color: #ed6528 !important;
+}
 
 
 

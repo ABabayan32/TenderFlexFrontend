@@ -8,32 +8,32 @@
     <table style="width: 150%;" v-if="offers.length !==0 ">
       <thead>
       <tr>
-        <th>
-          OFFICIAL NAME <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          official name <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          PRICE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          price <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          COUNTRY <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          country <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          RECEIVED DATE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          recieved date <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          STATUS <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          status <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
       </tr>
       </thead>
       <tbody>
       <tr  v-for="offer in offers" :key='offer'>
-        <td v-if="!!tender" style="width: 20%;text-align: center;color: #3895bd">
+        <td v-if="!!tender" class="column-medium" style="color: #3895bd;">
           <a @click="openOfferDescription(offer)" type="button" >{{offer['name']}}</a></td>
-        <td v-if="!tender" style="width: 20%;text-align: center; color: #42474d">{{offer['name']}}</td>
-        <td style="width: 20%;text-align: center; color: #42474d">{{getCurrencyById(offer['currencyId'])+ " " + offer['bidPrice']}}</td>
-        <td style="width: 15%;text-align: center; color: #42474d">{{getCountryById(offer['countryId'])}}</td>
-        <td style="width: 15%;text-align: center; color: #42474d">{{offer['offerDate'] ? formatDate(offer['offerDate']) : ''}}</td>
-        <td style="width: 30%;text-align: center; color: #42474d"
+        <td v-if="!tender" class="column-medium">{{offer['name']}}</td>
+        <td class="column-medium">{{getCurrencyById(offer['currencyId'])+ " " + offer['bidPrice']}}</td>
+        <td class="column-small">{{getCountryById(offer['countryId'])}}</td>
+        <td class="column-small">{{offer['offerDate'] ? formatDate(offer['offerDate']) : ''}}</td>
+        <td class="column-medium " style="width: 30%"
             :class="{ green: offer['offerStatus'].id === 3, red: offer['offerStatus'].id === 5,
              grey: offer['offerStatus'].id === 4, blue: offer['offerStatus'].id === 2}">{{
             offer['offerStatus'] ? (isBidder ? offer['offerStatus'].nameBr : offer['offerStatus'].nameCt) : ''}}</td>
@@ -45,6 +45,10 @@
         :length="pageCount"
         :showFirstLastPage="true"
         :size="countPerPage"
+        firstIcon="fa fa-angle-double-left"
+        lastIcon="fa fa-angle-double-right"
+        next-icon="fa fa-angle-right"
+        prev-icon="fa fa-angle-left"
         @update:modelValue="pageChange()"
     ></v-pagination>
 
@@ -205,6 +209,20 @@ export default {
 
 
 <style >
+.uppercase{
+  text-transform: uppercase; }
+.column-small{
+  width: 15%;
+  text-align: center;
+  color: #42474d;
+
+}
+.column-medium{
+  width: 20%;
+ text-align: center;
+  color: #42474d;
+}
+
 .offer-table{
   margin-top: -6.567rem;
   padding-left: 20%;

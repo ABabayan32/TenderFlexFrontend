@@ -182,6 +182,14 @@
   width: 30%;
 }
 
+input {
+  padding-left: 0.3rem;
+}
+
+select {
+  padding-left: 0.3rem;
+}
+
 .file-upload-label {
   width: 20%;
 }
@@ -226,4 +234,22 @@ select{
   height: 1.7rem;
   float: left;
   width: 38%;
+}
+
+.v-pagination .v-btn {
+  border-radius: 4px;
+  height: 2.5rem !important;
+  width: 2.5rem !important;
+  color: #646b70 !important;
+}
+.v-pagination__item {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.2rem;
+}
+.v-btn--icon .v-icon {
+  color: #646b70 !important;
+}
+.v-pagination {
+  margin-left: 17rem;
 }
