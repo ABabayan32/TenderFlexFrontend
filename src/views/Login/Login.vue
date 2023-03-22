@@ -38,9 +38,11 @@ export default {
              return response.json()}}
           ).then(resp=>{
               this.$cookies.set('access_token', resp['access_token']);
-              if (resp['role'] != null) {
-                this.$cookies.set('role', resp['role']);
+              this.$cookies.set('role', resp['role']);
+              if (resp['role'] === 'CONTRACTOR') {
                 router.replace("/contractorHome");
+              } else {
+                router.replace("/bidderHome");
               }
   }) } }
 }
@@ -49,41 +51,44 @@ export default {
 
 
 <template>
-
+  <div class="background-gray">
   <span class='login-icon tender-flex-icon'></span>
-  <div class="rcorners1 login-form" style="background-color: white">
+  <div class="rcorners1 login-form" style="background-color: #ffffff">
     <p>Log in to proceed</p>
-    <input class="rcorners1" v-model="login" placeholder="login" />
-    <input class="rcorners1" type="password" v-model="password" placeholder="password" />
-    <button class="rcorners1 login-button" @click="Login">Login</button>
+    <input class="rcorners1" v-model="login" placeholder="Username" />
+    <input class="rcorners1" type="password" v-model="password" placeholder="Password" />
+    <button class="rcorners1 login-button" @click="Login" >LOG IN</button>
   </div>
-
+  </div>
 </template>
 
 <style scoped>
 @import "@/styles/main.css";
+.background-gray {
+  background-color: #72c5e8;
+}
 .login-form {
   position: fixed;
   top: 26%;
   left: 36%;
-  height: 400px;
-  width: 400px;
+  height: 24rem;
+  min-width: 24rem;
 }
 
 .login-button {
-  width: 90%;
-  background-color: #27aae1;
+  min-width: 90%;
+  background-color: rgb(67, 133, 190);
   color: #ffffff;
-  padding: 14px 20px;
+  padding: 0.875rem 1.25rem;
   margin: 5%;
   cursor: pointer;
-  height: 60px;
+  height: 3.75rem;
 }
 
 input {
   height: 60px;
   width: 90%;
-  padding: 12px 20px;
+  padding: 0.75rem 1.25rem;
   margin: 5%;
   display: flex;
   box-sizing: border-box;
@@ -106,6 +111,6 @@ p {
   background-size: 18.75rem;
   width: 18.75rem;
   height: 3.6875rem;
-  border: 0.0625rem solid white;
+  border: 0.0625rem solid #ffffff;
 }
 </style>
