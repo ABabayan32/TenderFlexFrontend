@@ -1,5 +1,5 @@
 <template>
-  <div class="table-header-container"></div>
+  <div class="header-container"></div>
   <div class="tender-table">
     <div class="table-title">
       <h1> Tenders</h1>
@@ -20,9 +20,6 @@
         <th class="uppercase">
           deadline <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th class="uppercase">
-          offerstatus <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
-        </th>
       </tr>
       </thead>
       <tbody>
@@ -30,13 +27,12 @@
         <td class="column-small" style=" color: #3895bd"><a @click="onTenderFieldClick(tender)" type="button" >
           {{tender['cpv'] ? tender['cpv']['name']+'/'+tender['cpv']['field'] : ''}}</a></td>
         <td class="column-small">{{tender['name']}}</td>
-        <td class="column-small" style="color: #6de165" >{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
-        <td class="column-small">{{tender['deadForSinging'] ? formatDate(tender['deadForSinging']) : ''}}</td>
-        <td class="column-small">{{tender['offerStatus'] ? tender['offerStatus'].name : ''}}</td>
+        <td class="column-small" :class="{'status-green': tender['tenderStatus'] && tender['tenderStatus'].id ===1}" >{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
+        <td class="column-small">{{tender['deadForSinging'] ? formatTenderDate(tender['deadForSinging']) : ''}}</td>
       </tr>
       </tbody>
     </table>
-    <v-pagination
+    <v-pagination v-if="tenders.length !== 0"
         :disabled = "tenders.length === 0"
         v-model="page"
         :length="pageCount"
@@ -47,11 +43,10 @@
         :showFirstLastPage="true"
         :size="count"
         @update:modelValue="pageChange()"
-    ></v-pagination> <div class="v-pagination_list"></div>
-
-      <div class="blank-table" v-if="tenders.length ===0">
-        <div class="no-tenders">There are no published Tenders</div>
-      </div>
+    ></v-pagination>
+  </div>
+  <div class="blank-table blank-table-width" v-if="tenders.length === 0">
+    <div class="no-tenders">There are no published Tenders</div>
   </div>
 </template>
 
@@ -136,7 +131,7 @@ export default {
           });
     },
 
-    formatDate(miliseconds) {
+    formatTenderDate(miliseconds) {
       let d = new Date(miliseconds);
       return formatDate(d);
     },
@@ -164,15 +159,6 @@ export default {
   margin-top: -6.567rem;
   padding-left: 20%;
   max-width: 60%;
-}
-
-.table-header-container {
-  height: 10.6875rem;
-  max-width: 101.2%;
-  margin-left: -0.5rem;
-  margin-top: 5.125rem;
-  border-color: #ffffff;
-  background-color: #27aae1;
 }
 
 table  {
@@ -219,6 +205,10 @@ thead{
   border-radius: 0px;
   position: static !important;
   background-color: #ed6528 !important;
+}
+
+.status-green {
+  color: #6de165
 }
 
 

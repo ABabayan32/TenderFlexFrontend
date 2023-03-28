@@ -2,8 +2,8 @@
 <template>
   <div>
     <Header
-        urlForTendersCount="/tenders/me/count"
-        urlForOffersCount="/tenders/me/offers/count"
+        :tendersCount="tendersCount"
+        :offersCount="offersCount"
         @tendersOpen="tenders"
         @offersOpen="offers"
         @newTenderOpen="newTender">
@@ -49,6 +49,9 @@ import OfferDescription from "@/views/OfferDescription/OfferDescription.vue";
 
 </script>
 <script>
+import {API_BASE_URL} from "@/const_config";
+import {getAuthenticatedHeaders, logout} from "@/utils";
+
 export default {
   data() {
     return {
@@ -59,11 +62,19 @@ export default {
       tender: null,
       offer:null,
       tenderDesShown:false,
-      offerDesShown:false
+      offerDesShown:false,
+      tendersCount: 0,
+      offersCount: 0
     }
   },
+  async beforeMount() {
+    await this.fetchTenderCount();
+    await this.fetchOfferCount();
+  },
   methods: {
-    offersByTender(tender) {
+    async offersByTender(tender) {
+      await this.fetchTenderCount();
+      await this.fetchOfferCount();
       this.tender = tender;
       this.tendersShown = false;
       this.offersShown = false;
@@ -72,7 +83,9 @@ export default {
       this.newTenderShow = false;
       this.offerDesShown=false;
     },
-    tenders(){
+    async tenders(){
+      await this.fetchTenderCount();
+      await this.fetchOfferCount();
       this.tendersShown = true;
       this.offersShown = false;
       this.offersForTenderShown = false;
@@ -80,7 +93,9 @@ export default {
       this.tenderDesShown=false;
       this.offerDesShown=false;
     },
-    tenderDescriptionOpen(tender) {
+    async tenderDescriptionOpen(tender) {
+      await this.fetchTenderCount();
+      await this.fetchOfferCount();
       this.tender = tender;
       this.tendersShown = false;
       this.tenderDesShown = true;
@@ -89,7 +104,9 @@ export default {
       this.newTenderShow = false;
       this.offerDesShown=false;
     },
-    offers(){
+    async offers(){
+      await this.fetchTenderCount();
+      await this.fetchOfferCount();
       this.tendersShown = false;
       this.offersShown = true;
       this.offersForTenderShown = false;
@@ -97,7 +114,9 @@ export default {
       this.tenderDesShown=false;
       this.offerDesShown=false;
     },
-    offerStatusChanged(){
+    async offerStatusChanged(){
+      await this.fetchTenderCount();
+      await this.fetchOfferCount();
       this.tendersShown = false;
       this.offersShown = true;
       this.offersForTenderShown = false;
@@ -105,7 +124,9 @@ export default {
       this.tenderDesShown=false;
       this.offerDesShown=false;
     },
-    newTender(){
+    async newTender(){
+      await this.fetchTenderCount();
+      await this.fetchOfferCount();
       this.tendersShown = false;
       this.offersShown = false;
       this.offersForTenderShown = false;
@@ -113,7 +134,9 @@ export default {
       this.tenderDesShown=false;
       this.offerDesShown=false;
     },
-    openOfferDescription(data){
+    async openOfferDescription(data){
+      await this.fetchTenderCount();
+      await this.fetchOfferCount();
       this.tender=data.tender;
       this.offer=data.offer;
       this.offerDesShown=true;
@@ -122,6 +145,49 @@ export default {
       this.offersForTenderShown = false;
       this.newTenderShow = false;
       this.tenderDesShown=false;
+    },
+    async fetchOfferCount(){
+      this.offersCount = await fetch(API_BASE_URL + '/tenders/me/offers/count',{
+        method: 'GET',
+        node: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: getAuthenticatedHeaders(),
+      })
+
+          .then((response) => {
+                if (response.ok) {
+                  return response.json()
+                } else if(response.status === 401 || response.status === 403){
+                  logout();
+                }
+              }
+          )
+          .then(response=>
+          {
+            return response;
+          });
+    },
+    async fetchTenderCount() {
+      this.tendersCount = await fetch(API_BASE_URL + '/tenders/me/count',{
+        method: 'GET',
+        node: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: getAuthenticatedHeaders(),
+      })
+          .then((response) => {
+            if (response.ok) {
+              return response.json()
+            } else if(response.status === 401 || response.status === 403){
+              logout()
+              return null;
+            }
+          })
+          .then(response=>
+          {
+            return response;
+          });
     }
   }
 }

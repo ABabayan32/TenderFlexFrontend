@@ -14,9 +14,9 @@ export default {
   async beforeMount() {
     if(this.$cookies.get('access_token') && this.$cookies.get('role')){
       if (this.$cookies.get('role') === 'CONTRACTOR') {
-        router.replace("/contractorHome");
+        router.replace("/contractor-home");
       } else {
-        router.replace("/bidderHome");
+        router.replace("/bidder-home");
       }
     }
   },
@@ -63,9 +63,9 @@ export default {
                 this.$cookies.set('access_token', resp['access_token']);
                 this.$cookies.set('role', resp['role']);
                 if (resp['role'] === 'CONTRACTOR') {
-                  router.replace("/contractorHome");
+                  router.replace("/contractor-home");
                 } else {
-                  router.replace("/bidderHome");
+                  router.replace("/bidder-home");
                 }
               }
           })

@@ -1,69 +1,22 @@
 
 
 <script>
-import {getAuthenticatedHeaders,logout} from "@/utils";
-import {API_BASE_URL} from "@/const_config.js";
+import {logout} from "@/utils";
 
 export default {
   emits: ['tendersOpen', 'offersOpen', 'newTenderOpen'],
   props: {
     class: null,
-    urlForTendersCount: null,
-    urlForOffersCount: null,
+    tendersCount: 0,
+    offersCount: 0,
   },
   data()  {
 
     return {
-      page: 0,
-      tenderCount: 0,
-      offerCount: 0,
-    }
-  },
-  async beforeMount() {
-    try { this.tenderCount = await fetch(API_BASE_URL + this.urlForTendersCount,{
-      method: 'GET',
-      node: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: getAuthenticatedHeaders(),
-    })
-        .then((response) => {
-              if (response.ok) {
-                return response.json()
-              } else if(response.status === 401 || response.status === 403){
-                logout()
-                return null;
-              }
-            })
-        .then(response=>
-    {
-      return response;
-    });
-    this.offerCount = await fetch(API_BASE_URL + this.urlForOffersCount,{
-      method: 'GET',
-          node: 'cors',
-          cache: 'no-cache',
-          credentials: 'same-origin',
-          headers: getAuthenticatedHeaders(),
-    })
-
-        .then((response) => {
-          if (response.ok) {
-            return response.json()
-          } else if(response.status === 401 || response.status === 403){
-            logout();
-          }
-        }
-        )
-        .then(response=>
-        {
-          return response;
-        });} catch (error) {
-      console.error(error);
+      page: 0
     }
   },
   methods: {
-
     onLogout () {
       logout();
     } ,
@@ -93,19 +46,19 @@ export default {
     <div class="view-change-button-container">
       <button @click="notifyTendersOpen" class="view-change-button">
         <v-icon class="button-icon" icon="fa fa-heartbeat"></v-icon>
-        Tenders <span class="available-count">{{tenderCount}}</span></button> </div>
+        Tenders <span class="available-count">{{tendersCount}}</span></button> </div>
 
     <div class="view-change-button-container">
       <button @click="notifyOffersOpen" class="view-change-button">
         <v-icon class="button-icon" icon="fa fa-message" ></v-icon>
-        Offers<span class="available-count">{{offerCount}}</span> </button></div>
+        Offers<span class="available-count">{{offersCount}}</span> </button></div>
 
     <div class="exit-button-container">
       <button @click="onLogout" class="exit-button">
         <v-icon class="button-icon" icon="fa fa-sign-out" /></button>
     </div>
 
-    <div  @click="onCreateNewTender" class="view-change-button-container" v-if="this.$cookies.get('role')==='CONTRACTOR'">
+    <div  @click="onCreateNewTender" class="create-button-container" v-if="this.$cookies.get('role')==='CONTRACTOR'">
       <button class="view-change-button create-button"><v-icon class="create-button-icon"  icon="fa fa-plus" />CREATE NEW TENDER</button>
     </div>
   </div>
@@ -138,6 +91,7 @@ export default {
   top: 0;
   min-width: 100%;
   left: 0;
+  z-index:1000;
 }
 
 .header-icon {
@@ -168,6 +122,23 @@ export default {
   border: 0.0625rem solid #0a50ad;
 }
 
+.create-button-container {
+  float: right;
+  background-color: #27aae1;
+  display: flex;
+  max-width: 15rem;
+  min-width: 12rem;
+  height: 3.99rem;
+  margin-top: -0.625rem;
+  margin-left: 2rem;
+}
+
+.create-button:hover {
+  background-color: #073470;
+  border-radius: 0.95rem;
+  border: 0.0625rem solid #073470;
+}
+
 .view-change-button-container {
   background-color: #27aae1;
   display: flex;
@@ -187,10 +158,10 @@ export default {
 
 .create-button {
   font-size: 1rem !important;
-  margin-left: 18rem;
-  max-width: 20rem;
+  margin-right: 2rem;
+  max-width: 15rem;
   min-width: 15rem;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .create-button-icon {
