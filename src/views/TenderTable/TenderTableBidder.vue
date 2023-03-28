@@ -8,32 +8,31 @@
       <thead>
       <tr>
 
-        <th>
-          FIELD <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          field <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          CONTRACTOR NAME <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          contractor name <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          TENDER STATUS <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          tender status <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          DEADLINE <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          deadline <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
-        <th>
-          OFFER STATUS <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
+        <th class="uppercase">
+          offerstatus <i class="bi bi-sort-alpha-down" aria-label='Sort Icon'></i>
         </th>
       </tr>
       </thead>
       <tbody>
       <tr  v-for="tender in tenders" :key='tender'>
-        <td style="width: 30%;text-align: center; color: #3895bd"><a @click="onTenderFieldClick(tender)" type="button" >
-
+        <td class="column-small" style=" color: #3895bd"><a @click="onTenderFieldClick(tender)" type="button" >
           {{tender['cpv'] ? tender['cpv']['name']+'/'+tender['cpv']['field'] : ''}}</a></td>
-        <td style="width: 30%;text-align: center; color: #42474d">{{tender['name']}}</td>
-        <td style="width: 20%;text-align: center; color: #60c758">{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
-        <td style="width: 20%;text-align: center; color: #42474d">{{tender['deadForSinging'] ? formatDate(tender['deadForSinging']) : ''}}</td>
-        <td style="width: 20%;text-align: center; color: #42474d">{{tender['offerStatus'] ? tender['offerStatus'].name : ''}}</td>
+        <td class="column-small">{{tender['name']}}</td>
+        <td class="column-small" style="color: #6de165" >{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
+        <td class="column-small">{{tender['deadForSinging'] ? formatDate(tender['deadForSinging']) : ''}}</td>
+        <td class="column-small">{{tender['offerStatus'] ? tender['offerStatus'].name : ''}}</td>
       </tr>
       </tbody>
     </table>
@@ -41,6 +40,10 @@
         :disabled = "tenders.length === 0"
         v-model="page"
         :length="pageCount"
+        firstIcon="fa fa-angle-double-left"
+        lastIcon="fa fa-angle-double-right"
+        next-icon="fa fa-angle-right"
+        prev-icon="fa fa-angle-left"
         :showFirstLastPage="true"
         :size="count"
         @update:modelValue="pageChange()"
@@ -53,7 +56,7 @@
 </template>
 
 <script>
-import {getAuthenticatedHeaders, logout} from "@/common_functions";
+import {formatDate, getAuthenticatedHeaders, logout} from "@/utils";
 import {API_BASE_URL} from "@/const_config.js";
 export default {
   emits: ['desOfTender'],
@@ -135,9 +138,7 @@ export default {
 
     formatDate(miliseconds) {
       let d = new Date(miliseconds);
-      return ("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" +
-          d.getFullYear() ;
-
+      return formatDate(d);
     },
     onTenderFieldClick(tender) {
       this.$emit("TenderDesOpen", tender);
@@ -147,8 +148,20 @@ export default {
 </script>
 
 <style scoped>
+
+
+.column-small {
+  width:30%;
+  text-align: center;
+  color: #42474d;
+}
+
+
+.uppercase {
+  text-transform: uppercase;
+}
 .tender-table{
-  margin-top: -5.6rem;
+  margin-top: -6.567rem;
   padding-left: 20%;
   max-width: 60%;
 }
@@ -202,7 +215,11 @@ thead{
   justify-content: center;
   width: 150%;
 }
-
+.v-pagination__item--is-active {
+  border-radius: 0px;
+  position: static !important;
+  background-color: #ed6528 !important;
+}
 
 
 

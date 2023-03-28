@@ -1,50 +1,77 @@
 
 <script>
 import router from "@/router";
-import {getHeaders} from "@/common_functions";
+import {getHeaders} from "@/utils";
 import {API_BASE_URL} from "@/const_config.js";
 export default {
   data() {
     return {
+      validations:{},
       login: '',
       password: ''
     }
   },
-
-  methods: {
-
-    Login() {
-      let details = {
-        'username': this.login,
-        'password': this.password,
-      };
-
-      let formBody = [];
-      for (let property in details) {
-        let encodedKey = property;
-        let encodedValue = details[property];
-        formBody.push(encodedKey + "=" + encodedValue);
+  async beforeMount() {
+    if(this.$cookies.get('access_token') && this.$cookies.get('role')){
+      if (this.$cookies.get('role') === 'CONTRACTOR') {
+        router.replace("/contractorHome");
+      } else {
+        router.replace("/bidderHome");
       }
-      formBody = formBody.join("&");
-      fetch(API_BASE_URL+'/login?'+formBody, {
-            method: 'POST',
-            node: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: getHeaders(),
-          })
-          .then((response) => {
-            if (response.ok) {
-             return response.json()}}
-          ).then(resp=>{
-              this.$cookies.set('access_token', resp['access_token']);
-              this.$cookies.set('role', resp['role']);
-              if (resp['role'] === 'CONTRACTOR') {
-                router.replace("/contractorHome");
-              } else {
-                router.replace("/bidderHome");
+    }
+  },
+  methods: {
+    Login() {
+      if(!this.login || !this.password){
+        this.validations = {
+          isNoLogin: !this.login,
+          isNoPassword: !this.password
+        }
+      } else {
+        let details = {
+          'username': this.login,
+          'password': this.password,
+        };
+
+        let formBody = [];
+        for (let property in details) {
+          let encodedKey = property;
+          let encodedValue = details[property];
+          formBody.push(encodedKey + "=" + encodedValue);
+        }
+        formBody = formBody.join("&");
+        fetch(API_BASE_URL+'/login?'+formBody, {
+              method: 'POST',
+              node: 'cors',
+              cache: 'no-cache',
+              credentials: 'same-origin',
+              headers: getHeaders(),
+            })
+            .then((response) => {
+              if (response.ok) {
+               return response.json()
               }
-  }) } }
+              if (response.status === 401) {
+                this.validations = {
+                  isNoLogin: true,
+                  isNoPassword: true
+                }
+                return null
+              }
+            }).then(resp=>{
+              if(resp){
+                this.$cookies.set('access_token', resp['access_token']);
+                this.$cookies.set('role', resp['role']);
+                if (resp['role'] === 'CONTRACTOR') {
+                  router.replace("/contractorHome");
+                } else {
+                  router.replace("/bidderHome");
+                }
+              }
+          })
+      }
+    }
+  }
 }
 </script>
 
@@ -55,8 +82,10 @@ export default {
   <span class='login-icon tender-flex-icon'></span>
   <div class="rcorners1 login-form" style="background-color: #ffffff">
     <p>Log in to proceed</p>
-    <input class="rcorners1" v-model="login" placeholder="Username" />
-    <input class="rcorners1" type="password" v-model="password" placeholder="Password" />
+    <input @change="validations.isNoLogin = (validations.isNoLogin ? !login : validations.isNoLogin)"
+           :class="{ invalid: validations.isNoLogin }" class="rcorners1" v-model="login" placeholder="Username" />
+    <input @change="validations.isNoPassword = (validations.isNoPassword ? !password : validations.isNoPassword)"
+           :class="{ invalid: validations.isNoPassword }" class="rcorners1" type="password" v-model="password" placeholder="Password" />
     <button class="rcorners1 login-button" @click="Login" >LOG IN</button>
   </div>
   </div>
@@ -112,5 +141,13 @@ p {
   width: 18.75rem;
   height: 3.6875rem;
   border: 0.0625rem solid #ffffff;
+}
+
+.invalid {
+  border: 0.063rem solid #ea1d1d !important;
+}
+
+.invalid::placeholder {
+  color: #ea1d1d;
 }
 </style>
