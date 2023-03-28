@@ -1,5 +1,5 @@
 <template>
-  <div class="tender-form-header-container">
+  <div class="header-container">
 
   </div>
   <div  style="margin-top: -155px;width: 60%;
@@ -12,15 +12,18 @@
       <div class="create-tender-title"><h2>Contractor</h2></div>
       <div class="create-tender-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoName }" for="nameId"><span :class="{ invalidLabel: validations.isNoName }" class="asterix">*</span>Official name  </label>
-          <input :class="{ invalid: validations.isNoName }" id="nameId" class="tender-input" v-model="name" placeholder="Official name" />
+          <label :class="{ 'invalid-label': validations.isNoName }" for="nameId">
+            <span :class="{ 'invalid-label': validations.isNoName }" class="asterix">*</span>Official name  </label>
+          <input :class="{ invalid: validations.isNoName }" maxlength="50" id="nameId" class="tender-input" v-model="name" placeholder="Official name" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoNationalRegNumber }"><span :class="{ invalidLabel: validations.isNoNationalRegNumber }" class="asterix">*</span>National registration number</label>
+          <label :class="{ 'invalid-label': validations.isNoNationalRegNumber }">
+            <span :class="{ 'invalid-label': validations.isNoNationalRegNumber }" class="asterix">*</span>National registration number</label>
           <input :class="{ invalid: validations.isNoNationalRegNumber }" class="tender-input" v-model="nationalRegNumber" placeholder="National registration number" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoCountryId }"><span :class="{ invalidLabel: validations.isNoCountryId }" class="asterix">*</span>Country</label>
+          <label :class="{ 'invalid-label': validations.isNoCountryId }">
+            <span :class="{ 'invalid-label': validations.isNoCountryId }" class="asterix">*</span>Country</label>
           <select :class="{ invalid: validations.isNoCountryId }" v-model="countryId">
             <option :value="null">Select</option>
             <option v-for="countryToSelect in countries" :key="countryToSelect" :value="countryToSelect.countryId">{{countryToSelect.name}}</option>
@@ -30,56 +33,65 @@
       <div class="create-tender-row">
         <div class="input-container">
           <label>City/Town</label>
-          <input class="tender-input" v-model="townCity" placeholder="City/Town" />
+          <input class="tender-input" v-model="townCity" maxlength="50" placeholder="City/Town" />
         </div>
       </div>
       <div class="create-tender-title"><h2>Contract person</h2></div>
       <div class="create-tender-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoContactPersonName }"><span :class="{ invalidLabel: validations.isNoContactPersonName }" class="asterix">*</span>Name</label>
-          <input :class="{ invalid: validations.isNoContactPersonName }" class="tender-input" v-model="contactPersonName" placeholder="Name" />
+          <label :class="{ 'invalid-label': validations.isNoContactPersonName }">
+            <span :class="{ 'invalid-label': validations.isNoContactPersonName }" class="asterix">*</span>Name</label>
+          <input :class="{ invalid: validations.isNoContactPersonName }" class="tender-input" maxlength="50" v-model="contactPersonName" placeholder="Name" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoContactPersonSurname }"><span :class="{ invalidLabel: validations.isNoContactPersonSurname }" class="asterix">*</span>Surname</label>
-          <input :class="{ invalid: validations.isNoContactPersonSurname }" class="tender-input" v-model="contactPersonSurname" placeholder="Surname" />
+          <label :class="{ 'invalid-label': validations.isNoContactPersonSurname }">
+            <span :class="{ 'invalid-label': validations.isNoContactPersonSurname }" class="asterix">*</span>Surname</label>
+          <input :class="{ invalid: validations.isNoContactPersonSurname }" class="tender-input" maxlength="50" v-model="contactPersonSurname" placeholder="Surname" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoPhoneNumber }"><span :class="{ invalidLabel: validations.isNoPhoneNumber }" class="asterix">*</span>Phone number</label>
+          <label :class="{ 'invalid-label': validations.isNoPhoneNumber }">
+            <span :class="{ 'invalid-label': validations.isNoPhoneNumber }" class="asterix">*</span>Phone number</label>
           <input :class="{ invalid: validations.isNoPhoneNumber }" class="tender-input" v-model="phoneNumber" placeholder="Phone number" />
         </div>
       </div>
       <div class="create-tender-title"><h2>Subject matter of procurement</h2></div>
       <div class="create-tender-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoCvpCodeId }"><span :class="{ invalidLabel: validations.isNoCvpCodeId }" class="asterix">*</span>CVP code</label>
+          <label :class="{ 'invalid-label': validations.isNoCvpCodeId }">
+            <span :class="{ 'invalid-label': validations.isNoCvpCodeId }" class="asterix">*</span>CVP code</label>
           <select :class="{ invalid: validations.isNoCvpCodeId }" v-model="cvpCodeId">
             <option :value="null">Select</option>
             <option v-for="cvpCodeSelect in cvpCodes" :key="cvpCodeSelect" :value="cvpCodeSelect.id">{{cvpCodeSelect.name}}</option>
           </select>
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoTenderTypeId }"><span :class="{ invalidLabel: validations.isNoTenderTypeId }" class="asterix">*</span>Type of tender</label>
+          <label :class="{ 'invalid-label': validations.isNoTenderTypeId }">
+            <span :class="{ 'invalid-label': validations.isNoTenderTypeId }" class="asterix">*</span>Type of tender</label>
           <select :class="{ invalid: validations.isNoTenderTypeId }" v-model="tenderTypeId">
             <option :value="null">Select</option>
             <option v-for="tenderType in tenderTypes" :key="tenderType" :value="tenderType.id">{{tenderType.name}}</option>
           </select>
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoDescription }"><span :class="{ invalidLabel: validations.isNoDescription }" class="asterix">*</span>Description</label>
-          <input :class="{ invalid: validations.isNoDescription }" class="tender-input" v-model="description" placeholder="Description" />
+          <label :class="{ 'invalid-label': validations.isNoTenderDescription }">
+            <span :class="{ 'invalid-label': validations.isNoTenderDescription }" class="asterix">*</span>Description</label>
+          <input :class="{ invalid: validations.isNoTenderDescription }" class="tender-input" maxlength="250"  v-model="tenderDescription" placeholder="Description" />
         </div>
       </div>
       <div class="create-tender-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoMaxValue }"><span :class="{ invalidLabel: validations.isNoMaxValue }" class="asterix">*</span>Maximum tender value</label>
-          <input :class="{ invalid: validations.isNoMaxValue }" class="tender-input" type="number" v-model="maxValue" placeholder="Maximum tender value" />
+          <label :class="{ 'invalid-label': validations.isNoMaxValue }">
+            <span :class="{ 'invalid-label': validations.isNoMaxValue }" class="asterix">*</span>Maximum tender value</label>
+          <input :class="{ invalid: validations.isNoMaxValue }" class="tender-input" min="0" type="number" v-model="maxValue" placeholder="Maximum tender value" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoMinValue }"><span :class="{ invalidLabel: validations.isNoMinValue }" class="asterix">*</span>Minimum tender value</label>
-          <input :class="{ invalid: validations.isNoMinValue }" class="tender-input" type="number" v-model="minValue" placeholder="Minimum tender value" />
+          <label :class="{ 'invalid-label': validations.isNoMinValue }">
+            <span :class="{ 'invalid-label': validations.isNoMinValue }" class="asterix">*</span>Minimum tender value</label>
+          <input :class="{ invalid: validations.isNoMinValue }" class="tender-input" min="0" type="number" v-model="minValue" placeholder="Minimum tender value" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoCurrencyId }"><span :class="{ invalidLabel: validations.isNoCurrencyId }" class="asterix">*</span>Currency</label>
+          <label :class="{ 'invalid-label': validations.isNoCurrencyId }">
+            <span :class="{ 'invalid-label': validations.isNoCurrencyId }" class="asterix">*</span>Currency</label>
           <select :class="{ invalid: validations.isNoCurrencyId }" v-model="currencyId">
             <option :value="null">Select</option>
             <option v-for="currency in currencies" :key="currency" :value="currency.currencyId">{{currency.name}}</option>
@@ -89,44 +101,48 @@
       <div class="create-tender-title"><h2>Date</h2></div>
       <div class="create-tender-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoPublicDate }"><span :class="{ invalidLabel: validations.isNoPublicDate }" class="asterix">*</span>Publication date</label>
-          <select :class="{ invalid: validations.isNoPublicDate }" v-model="publicDate">
-            <option :value="null">Select</option>
-            <option v-for="date in publicationDates" :key="date" :value="date.date">{{date.name}}</option>
-          </select>
+          <label>
+            <span class="asterix">*</span>Publication date</label>
+          <div class="tender-input publication-date"> {{formatTenderDate(publicDate)}} </div>
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoDeadLineOfSub }"><span :class="{ invalidLabel: validations.isNoDeadLineOfSub }" class="asterix">*</span>Deadline for offer submissin</label>
+          <label :class="{ 'invalid-label': validations.isNoDeadLineOfSub }">
+            <span :class="{ 'invalid-label': validations.isNoDeadLineOfSub }" class="asterix">*</span>Deadline for offer submissin</label>
           <input :class="{ invalid: validations.isNoDeadLineOfSub }" class="tender-input" type="date" v-model="deadLineOfSub" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoDeadForSinging }"><span :class="{ invalidLabel: validations.isNoDeadForSinging }" class="asterix">*</span>Deadline for signed contract submission</label>
-          <input :class="{ invalid: validations.isNoDeadForSinging }" class="tender-input" type="date" v-model="deadForSinging"/>
+          <label :class="{ 'invalid-label': validations.isNoDeadForSinging }">
+            <span :class="{ 'invalid-label': validations.isNoDeadForSinging }" class="asterix">*</span>Deadline for signed contract submission</label>
+          <input :disabled="!deadLineOfSub" :class="{ invalid: validations.isNoDeadForSinging }" class="tender-input" type="date" v-model="deadForSinging"/>
         </div>
       </div>
       <div class="create-tender-title"><h2>Documents</h2></div>
 
       <div class="file-upload-container">
-        <label :class="{ invalidLabel: validations.isNoContractFileKey }" class="file-upload-label">
-          <span :class="{ invalidLabel: validations.isNoContractFileKey }" class="asterix">*</span>Contract</label>
+        <label :class="{ 'invalid-label': validations.isNoContractFileKey }" class="file-upload-label">
+          <span :class="{ 'invalid-label': validations.isNoContractFileKey }" class="asterix">*</span>Contract</label>
         <input :class="{ invalid: validations.isNoContractFileKey }" class="upload-input" type="file" @change="uploadContractFile" ref="contractFile" placeholder="Contract" accept=".pdf">
         <input type="button" class="upload-button rcorners1" @click="submitFile(this.contractFile, 'contractFileKey')" value="Submit">
+        <v-icon class="button-icon" v-if="isContractFileSubmitted" icon="fa fa-check"></v-icon>
       </div>
       <div class="file-upload-container">
-        <label :class="{ invalidLabel: validations.isNoAwardFileKey }" class="file-upload-label">
-          <span :class="{ invalidLabel: validations.isNoAwardFileKey }" class="asterix">*</span>Award decision</label>
+        <label :class="{ 'invalid-label': validations.isNoAwardFileKey }" class="file-upload-label">
+          <span :class="{ 'invalid-label': validations.isNoAwardFileKey }" class="asterix">*</span>Award decision</label>
         <input :class="{ invalid: validations.isNoAwardFileKey }" class="upload-input" type="file" @change="uploadAwardFile" ref="awardFile" accept=".pdf">
-        <input type="button" class="upload-button rcorners1" @click="submitFile(this.awardFile, 'awardFileKey')" value="Submit">
+        <input  type="button" class="upload-button rcorners1" @click="submitFile(this.awardFile, 'awardFileKey')" value="Submit">
+        <v-icon class="button-icon" v-if="isAwardFileSubmitted" icon="fa fa-check"></v-icon>
       </div>
       <div class="file-upload-container">
-        <label :class="{ invalidLabel: validations.isNoDeclineFileKey }" class="file-upload-label">
-          <span :class="{ invalidLabel: validations.isNoDeclineFileKey }" class="asterix">*</span>Decline decision</label>
+        <label :class="{ 'invalid-label': validations.isNoDeclineFileKey }" class="file-upload-label">
+          <span :class="{ 'invalid-label': validations.isNoDeclineFileKey }" class="asterix">*</span>Decline decision</label>
         <input :class="{ invalid: validations.isNoDeclineFileKey }" class="upload-input" type="file" @change="uploadDeclineFile" ref="declineFile" accept=".pdf">
-        <input type="button" class="upload-button rcorners1" @click="submitFile(this.declineFile, 'declineFileKey')" value="Submit">
+        <input type="button" class="upload-button rcorners1" @click="submitFile(declineFile, 'declineFileKey')" value="Submit">
+        <v-icon class="button-icon" v-if="isDeclineFileSubmitted" icon="fa fa-check"></v-icon>
       </div>
     </div>
-    <button class="rcorners1 cancel-button" @click="cancelTender">Cancel</button>
-    <button class="rcorners1 publish-button" @click="publishTender">Publish</button>
+    <button class="rcorners1 button" style="background-color: #ffffff;color: #27aae1; border-color: #27aae1; "
+            @click="cancelTender">Cancel</button>
+    <button class="rcorners1 button" @click="publishTender">Publish</button>
 
   </div>
 
@@ -139,12 +155,11 @@ import {formatDate, getAuthenticatedHeaders, getHeaders, logout} from "@/utils";
 import router from "@/router";
 
   export default {
-    name: "CreateTender",
+    name: "Create-tender",
     emits: ["created"],
     data() {
       return {
         validations:{},
-        publicationDates: [],
         countries: [],
         cvpCodes: [],
         currencies: [],
@@ -158,19 +173,23 @@ import router from "@/router";
         phoneNumber: null,
         cvpCodeId: null,
         tenderTypeId: null,
-        description: null,
+        tenderDescription: null,
         minValue: null,
         maxValue: null,
-        currencyId: null,
-        publicDate: null,
+        currencyId: 3,
+        publicDate: new Date(),
         deadLineOfSub: null,
         deadForSinging: null,
 
         contractFile: null,
+        isContractFileSubmitted: false,
+        contractFileSubmitted: null,
         fileKeys: new Map(),
         declineFile: null,
+        isDeclineFileSubmitted: false,
         declineFileKey: null,
         awardFile: null,
+        isAwardFileSubmitted: false,
         awardFileKey: null,
       }
     },
@@ -228,18 +247,23 @@ import router from "@/router";
             return response;
           });
       let currentDate = new Date();
-      this.publicationDates.push({name: formatDate(currentDate), date: new Date(currentDate)});
-      this.publicationDates.push({name: formatDate(currentDate.setDate(currentDate.getDate() + 1)),
-        date: new Date(currentDate)});
-      this.publicationDates.push({name: formatDate(currentDate.setDate(currentDate.getDate() + 1)),
-        date: new Date(currentDate)});
+      this.deadLineOfSub = new Intl.DateTimeFormat("fr-CA", {year: "numeric", month: "2-digit", day: "2-digit"})
+          .format(currentDate.setDate(currentDate.getDate() + 1));
     },
     methods: {
+      formatTenderDate(miliseconds) {
+        if(!!miliseconds){
+          let d = new Date(miliseconds);
+          return formatDate(d);
+        }
+      },
       uploadContractFile() {
         this.contractFile = this.$refs.contractFile.files[0];
+
       },
       uploadDeclineFile() {
         this.declineFile = this.$refs.declineFile.files[0];
+        this.isDeclineFileSubmitted = false;
       },
       uploadAwardFile() {
         this.awardFile = this.$refs.awardFile.files[0];
@@ -265,7 +289,11 @@ import router from "@/router";
                       }
                     }
                 ).then((response)=>{
-            this.fileKeys.set(fileKeyKey, response)
+            this.fileKeys.set(fileKeyKey, response);
+            this.isDeclineFileSubmitted = !!this.fileKeys.get('declineFileKey');
+            this.isAwardFileSubmitted = !!this.fileKeys.get('awardFileKey');
+            this.isContractFileSubmitted = !!this.fileKeys.get('contractFileKey');
+
           })
         }
       },
@@ -275,10 +303,11 @@ import router from "@/router";
             || !this.countryId
             || !this.contactPersonName
             || !this.contactPersonSurname
+            || Number.isNaN(+this.phoneNumber)
             || !this.phoneNumber
             || !this.cvpCodeId
             || !this.tenderTypeId
-            || !this.description
+            || !this.tenderDescription
             || !this.minValue
             || !this.maxValue
             || !this.currencyId
@@ -294,10 +323,10 @@ import router from "@/router";
             isNoCountryId: !this.countryId,
             isNoContactPersonName: !this.contactPersonName,
             isNoContactPersonSurname: !this.contactPersonSurname,
-            isNoPhoneNumber:!this.phoneNumber,
+            isNoPhoneNumber: (!this.phoneNumber || Number.isNaN(+this.phoneNumber)),
             isNoCvpCodeId:!this.cvpCodeId,
             isNoTenderTypeId: !this.tenderTypeId,
-            isNoDescription: !this.description,
+            isNoTenderDescription: !this.tenderDescription,
             isNoMinValue: !this.minValue,
             isNoMaxValue: !this.maxValue,
             isNoCurrencyId: !this.currencyId,
@@ -317,10 +346,10 @@ import router from "@/router";
             "townCity": this.townCity,
             "contactPersonName": this.contactPersonName,
             "contactPersonSurname": this.contactPersonSurname,
-            "phoneNumber": this.phoneNumber,
+            "phoneNumber": this.phoneNumber ? ""+this.phoneNumber : null,
             "cpv": {id:this.cvpCodeId},
             "tenderTypeId": this.tenderTypeId,
-            "description": this.description,
+            "tenderDescription": this.tenderDescription,
             "minValue": this.minValue,
             "maxValue": this.maxValue,
             "currencyId": this.currencyId,
@@ -329,7 +358,7 @@ import router from "@/router";
             "declineFileKey": this.fileKeys.get('declineFileKey'),
             "publicDate": this.publicDate ? this.publicDate.getTime() : null,
             "deadLineOfSub": this.deadLineOfSub ? new Date(this.deadLineOfSub).getTime() : null,
-            "deadForSinging": this.deadForSinging ? new Date(this.deadForSinging).getTime() : null}),
+            "deadForSinging": this.deadLineOfSub && this.deadForSinging ? new Date(this.deadForSinging).getTime() : null}),
           headers: {
             ...getAuthenticatedHeaders(),
             "Content-Type": "application/json",
@@ -364,11 +393,28 @@ label {
   display: none;
 }
 
+.publication-date {
+  padding: 0.5rem;
+}
+
 input {
   display:flex;
 }
-h2{
+h2 {
+  overflow: hidden;
+  position: relative;
   color: #444a4f;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+h2::after {
+  content: '';
+  width: 100%;
+  height: .1rem;
+  background: #f5f5f5;
+  position: absolute;
+  top: 50%;
+  margin-left: 1rem;
 }
 
 .create-tender-title {
@@ -388,15 +434,6 @@ h2{
   background-color: #ffffff;
   border: 0.063rem solid #ffffff;
 }
-
-.tender-form-header-container {
-  height: 10.68rem;
-  margin-left: -0.5rem;
-  margin-top: 5.125rem;
-  border-color: #ffffff;
-  background-color: #27aae1;
-}
-
 
 .tender-input{
   margin-top: 1rem;

@@ -1,12 +1,12 @@
 <template>
-  <div class="form-header-container">
+  <div class="header-container">
 
   </div>
-  <div  style="margin-top: -155px;width: 60%;
+  <div v-if="tenderValue" style="margin-top: -155px;width: 60%;
     margin-left: 20%;">
     <a class="description-back" target="_blank" type="button" @click="back()">{{"< back"}}</a>
     <div class="description-main-title">
-      <h1>{{!!this.tender.cpv ? this.tender.cpv.field : ""}} ({{!!this.tender.cpv ? this.tender.cpv.name : ""}}) </h1>
+      <h1>{{!!tenderValue.cpv ? tenderValue.cpv.field : ""}} ({{!!tenderValue.cpv ? tenderValue.cpv.name : ""}}) </h1>
     </div >
     <div class="description-tabs">
       <div v-if="!isTender">
@@ -18,11 +18,11 @@
         <a class="description-tab" type="button" @click="isTender=false">{{isBidder ? 'My Offer' : 'Offers'}}</a>
       </div>
     </div>
-    <div v-if="!isTender && !isBidder">
-      <OfferTable @offerDescriptionOpen="openOfferDescription" :baseUrl="'/tenders/me/offers'" :tender="tender"></OfferTable>
+    <div v-if="!isTender && !isBidder && !tenderId">
+      <OfferTable @offerDescriptionOpen="openOfferDescription" :baseUrl="'/tenders/me/offers'" :tender="tenderValue"></OfferTable>
     </div>
     <div v-if="!isTender && isBidder">
-      <OfferDescription @offerStatusChanged="back" @createOfferOpen="createOffer" :tender="tender"></OfferDescription>
+      <OfferDescription @offerStatusChanged="back" @createOfferOpen="createOffer" :tender="tenderValue"></OfferDescription>
     </div>
     <div v-if="isTender" class="description-form">
       <div class="description-main-row">
@@ -32,21 +32,21 @@
           <div class="description-row">
             <div class="description-container">
               <label class="description-label">  Official Name: </label>
-              <div class="description-value"> {{this.tender.name}} </div>
+              <div class="description-value"> {{tenderValue.name}} </div>
             </div>
             <div class="description-container">
               <label class="description-label"> Country: </label>
-              <div class="description-value"> {{getCountryById(this.tender.countryId)}} </div>
+              <div class="description-value"> {{getCountryById(tenderValue.countryId)}} </div>
             </div>
           </div>
         <div class="description-row">
           <div class="description-container">
             <label class="description-label">National Registration Number: </label>
-            <div class="description-value" > {{this.tender.nationalRegNumber}} </div>
+            <div class="description-value" > {{tenderValue.nationalRegNumber}} </div>
           </div>
           <div class="description-container">
             <label class="description-label">City/Town: </label>
-            <div class="description-value" > {{this.tender.townCity}} </div>
+            <div class="description-value" > {{tenderValue.townCity}} </div>
           </div>
         </div>
       </div>
@@ -56,17 +56,17 @@
       <div class="description-row">
         <div class="description-container">
           <label class="description-label"> Name: </label>
-          <div class="description-value"> {{this.tender.contactPersonName}} </div>
+          <div class="description-value"> {{tenderValue.contactPersonName}} </div>
         </div>
         <div class="description-container">
           <label class="description-label"> Surname: </label>
-          <div class="description-value"> {{this.tender.contactPersonSurname}} </div>
+          <div class="description-value"> {{tenderValue.contactPersonSurname}} </div>
         </div>
       </div>
       <div class="description-row">
         <div class="description-container">
           <label class="description-label"> Phone Number:</label>
-          <div class="description-value"> {{this.tender.phoneNumber}} </div>
+          <div class="description-value"> {{tenderValue.phoneNumber}} </div>
         </div>
       </div>
 
@@ -76,7 +76,7 @@
       <div class="description-row">
         <div class="description-container">
           <label class="description-label"> Procedure: </label>
-          <div class="description-value"> {{this.tender.name}} </div>
+          <div class="description-value"> {{tenderValue.name}} </div>
         </div>
         <div class="description-container">
           <label class="description-label"> Language: </label>
@@ -89,31 +89,31 @@
       <div class="description-row">
         <div class="description-container">
           <label class="description-label"> CPV Code: </label>
-          <div class="description-value"> {{!!this.tender.cpv ? this.tender.cpv.name : ""}} </div>
+          <div class="description-value"> {{!!tenderValue.cpv ? tenderValue.cpv.name : ""}} </div>
         </div>
         <div class="description-container">
           <label class="description-label"> Type of tender:</label>
-          <div class="description-value"> {{getTenderTypeById(this.tender.tenderTypeId)}} </div>
+          <div class="description-value"> {{getTenderTypeById(tenderValue.tenderTypeId)}} </div>
         </div>
       </div>
       <div class="description-row">
           <div class="description-container">
             <label class="description-label">Min Tender Value: </label>
-          <div class="description-value"> {{this.tender.minValue}} </div>
+          <div class="description-value"> {{tenderValue.minValue}} </div>
         </div>
         <div class="description-container">
           <label class="description-label">Max Tender Value: </label>
-          <div class="description-value"> {{this.tender.maxValue}} </div>
+          <div class="description-value"> {{tenderValue.maxValue}} </div>
         </div>
       </div>
       <div class="description-row">
         <div class="description-container">
           <label class="description-label"> Currency: </label>
-          <div class="description-value"> {{getCurrencyById(this.tender.currencyId)}} </div>
+          <div class="description-value"> {{getCurrencyById(tenderValue.currencyId)}} </div>
         </div>
         <div class="description-container">
           <label class="description-label"> Description: </label>
-          <div class="description-value"> {{this.tender.description}} </div>
+          <div class="description-value"> {{tenderValue.tenderDescription}} </div>
         </div>
       </div>
 
@@ -123,17 +123,17 @@
       <div class="description-row">
         <div class="description-container">
           <label class="description-label"> Publication Date: </label>
-          <div class="description-value"> {{formatDate(tender['publicDate'])}} </div>
+          <div class="description-value"> {{formatTenderDate(tenderValue['publicDate'])}} </div>
         </div>
         <div class="description-container">
           <label class="description-label"> Deadline for Offer Submission: </label>
-          <div class="description-value"> {{formatDate(tender['deadLineOfSub'])}} </div>
+          <div class="description-value"> {{formatTenderDate(tenderValue['deadLineOfSub'])}} </div>
         </div>
       </div>
       <div class="description-row">
         <div class="description-container">
           <label class="description-label"> Deadline for Signed Contract Submission: </label>
-          <div class="description-value"> {{formatDate(tender['deadForSinging'])}} </div>
+          <div class="description-value"> {{formatTenderDate(tenderValue['deadForSinging'])}} </div>
         </div>
       </div>
       <div class="description-title">
@@ -142,15 +142,15 @@
       <div class="description-row">
         <div class="description-download-value">
           <v-icon class="file-icon"  icon="fa fa-file-contract" />
-          <a class="description-file-link" target="_blank" type="button"  @click="downloadFile(tender['contractFileKey'])">contract document.pdf</a>
+          <a class="description-file-link" target="_blank" type="button"  @click="downloadFile(tenderValue['contractFileKey'])">contract document.pdf</a>
         </div>
         <div v-if="!isBidder" class="description-download-value">
           <v-icon class="file-icon"  icon="fa fa-file-contract" />
-          <a class="description-file-link" target="_blank" type="button"  @click="downloadFile(tender['awardFileKey'])">award document.pdf</a>
+          <a class="description-file-link" target="_blank" type="button"  @click="downloadFile(tenderValue['awardFileKey'])">award document.pdf</a>
         </div>
         <div v-if="!isBidder" class="description-download-value">
           <v-icon class="file-icon"  icon="fa fa-file-contract" />
-          <a class="description-file-link" target="_blank" type="button" @click="downloadFile(tender['declineFileKey'])">decline document.pdf</a>
+          <a class="description-file-link" target="_blank" type="button" @click="downloadFile(tenderValue['declineFileKey'])">decline document.pdf</a>
         </div>
       </div>
     </div>
@@ -166,13 +166,14 @@ import OfferDescription from "@/views/OfferDescription/OfferDescription.vue";
 export default {
   components: {OfferDescription, OfferTable},
   emits: ['backAction', 'offerDescriptionOpen'],
-  name: "TenderDescription",
-  props:['tender', 'isTender', 'isBidder'],
+  name: "tender-description",
+  props:['tender', 'isTender', 'isBidder', 'tenderId'],
   data() {
       return {
         countries: [],
         currencies: [],
         tenderTypes: [],
+        tenderValue: null
 
       }
   },
@@ -216,16 +217,33 @@ export default {
         .then(response => {
           return response;
         });
+    if(!this.tender && this.tenderId){
+      this.tenderValue = await fetch(API_BASE_URL+'/tenders/' + this.tenderId,{
+        headers: getAuthenticatedHeaders()
+      }).then((response) => {
+            if (response.ok) {
+              return response.json()
+            } else if (response.status === 401 || response.status === 403) {
+              logout();
+            }
+          }
+      )
+          .then(response => {
+            return response;
+          });
+    } else {
+      this.tenderValue = this.tender;
+    }
   },
   methods:{
     back() {
       this.$emit("backAction", true);
     },
     openOfferDescription(offer) {
-      this.$emit("offerDescriptionOpen", {tender:this.tender, offer: offer});
+      this.$emit("offerDescriptionOpen", {tender:this.tenderValue, offer: offer});
     },
     createOffer() {
-      this.$emit("createOfferOpen", this.tender);
+      this.$emit("createOfferOpen", this.tenderValue);
     },
     downloadFile(key){
       const url =API_BASE_URL+'/download/'+key
@@ -260,7 +278,7 @@ export default {
       }
       return !!tenderType ? tenderType.name : "";
     },
-    formatDate(miliseconds) {
+    formatTenderDate(miliseconds) {
       if(!!miliseconds){
         let d = new Date(miliseconds);
         return formatDate(d);

@@ -15,23 +15,23 @@ const routes =[
         component: Login,
     },
     {
-        path: '/contractorHome',
+        path: '/contractor-home',
         name: 'contractor-home',
         component: ContractorHome,
     } ,
     {
-        path: '/bidderHome',
+        path: '/bidder-home',
         name: 'bidder-home',
         component: BidderHome,
     } ,
     {
-        path: '/createTender',
+        path: '/create-tender',
         name: 'create-tender',
         component: CreateTender,
     },
     {
-        path: '/tenderDes',
-        name: 'tender-des',
+        path: '/tender-description',
+        name: 'tender-description',
         component: TenderDescription,
 
     },

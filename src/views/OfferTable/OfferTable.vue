@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!tender" class="offer-header-container"></div>
+  <div v-if="!tender" class="header-container"></div>
 
   <div :class="{ 'offer-table': !tender }" class="offer-table-with">
     <div v-if="!tender" class="table-title">
@@ -29,10 +29,12 @@
       <tr  v-for="offer in offers" :key='offer'>
         <td v-if="!!tender" class="column-medium" style="color: #3895bd;">
           <a @click="openOfferDescription(offer)" type="button" >{{offer['name']}}</a></td>
-        <td v-if="!tender" class="column-medium">{{offer['name']}}</td>
+        <td v-if="!tender && isBidder" class="column-medium" style="color: #3895bd;">
+          <a @click="openTenderDescription(offer)" type="button" >{{offer['name']}}</a></td>
+        <td v-if="!tender && !isBidder" class="column-medium">{{offer['name']}}</td>
         <td class="column-medium">{{getCurrencyById(offer['currencyId'])+ " " + offer['bidPrice']}}</td>
         <td class="column-small">{{getCountryById(offer['countryId'])}}</td>
-        <td class="column-small">{{offer['offerDate'] ? formatDate(offer['offerDate']) : ''}}</td>
+        <td class="column-small">{{offer['offerDate'] ? formatOfferDate(offer['offerDate']) : ''}}</td>
         <td class="column-medium " style="width: 30%"
             :class="{ green: offer['offerStatus'].id === 3, red: offer['offerStatus'].id === 5,
              grey: offer['offerStatus'].id === 4, blue: offer['offerStatus'].id === 2}">{{
@@ -65,7 +67,7 @@ import {API_BASE_URL} from "@/const_config.js";
 import router from "@/router";
 import {el} from "vuetify/locale";
 export default {
-  emits: ['offerDescriptionOpen'],
+  emits: ['offerDescriptionOpen', 'tenderDescriptionOpen'],
     props: ['tender', 'baseUrl', 'isBidder'],
     data() {
       return {
@@ -157,6 +159,9 @@ export default {
       openOfferDescription(offer){
         this.$emit("offerDescriptionOpen", offer);
       },
+      openTenderDescription(offer){
+        this.$emit("tenderDescriptionOpen", offer);
+      },
       async pageChange(){
         let url;
         if(!!this.tender){
@@ -197,7 +202,7 @@ export default {
         }
         return !!currency ? currency.name : "";
       },
-      formatDate(miliseconds) {
+      formatOfferDate(miliseconds) {
         let d = new Date(miliseconds);
         return formatDate(d);
 
@@ -232,15 +237,6 @@ export default {
   width: 60%;
 }
 
-.offer-header-container {
-  height: 10.6875rem;
-  max-width: 101.2%;
-  margin-left: -0.5rem;
-  margin-top: 5.125rem;
-  border-color: #ffffff;
-  background-color: #27aae1;
-}
-
 table  {
   border-spacing: 0;
   border-collapse: collapse;
@@ -251,11 +247,6 @@ table  {
   max-width: 100%;
   background-color: #ffffff;
   height: 15rem;
-}
-
-.blank-table-width {
-  margin-left: 20%;
-  width: 60%;
 }
 
 .no-offers {

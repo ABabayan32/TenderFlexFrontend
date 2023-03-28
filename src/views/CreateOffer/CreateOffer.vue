@@ -1,5 +1,5 @@
 <template>
-  <div class="offer-form-header-container">
+  <div class="header-container">
 
   </div>
   <div  style="margin-top: -155px;width: 60%;
@@ -9,23 +9,24 @@
     </div>
 
     <div class="offer-form">
-      <div class="create-offer-title">
+
+      <div class="create-offer-title" >
         <h2>Bidder</h2>
       </div>
       <div class="create-offer-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoName }" for="nameId">
-            <span :class="{ invalidLabel: validations.isNoName }" class="asterix">*</span>Official name  </label>
+          <label :class="{ 'invalid-label': validations.isNoName }" for="nameId">
+            <span :class="{ 'invalid-label': validations.isNoName }" class="asterix">*</span>Official name  </label>
           <input :class="{ invalid: validations.isNoName }" id="nameId" class="create-offer-input" v-model="name" placeholder="Official name" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoNatRegNumber }">
-            <span :class="{ invalidLabel: validations.isNoNatRegNumber }" class="asterix">*</span>National registration number</label>
+          <label :class="{ 'invalid-label': validations.isNoNatRegNumber }">
+            <span :class="{ 'invalid-label': validations.isNoNatRegNumber }" class="asterix">*</span>National registration number</label>
           <input :class="{ invalid: validations.isNoNatRegNumber }" class="create-offer-input" v-model="natRegNumber" placeholder="National registration number" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoCountryId }">
-            <span :class="{ invalidLabel: validations.isNoCountryId }" class="asterix">*</span>Country</label>
+          <label :class="{ 'invalid-label': validations.isNoCountryId }">
+            <span :class="{ 'invalid-label': validations.isNoCountryId }" class="asterix">*</span>Country</label>
           <select :class="{ invalid: validations.isNoCountryId }" v-model="countryId">
             <option :value="null">Select</option>
             <option v-for="countryToSelect in countries" :key="countryToSelect" :value="countryToSelect.countryId">{{countryToSelect.name}}</option>
@@ -38,23 +39,26 @@
           <input class="create-offer-input" v-model="townCity" placeholder="City/Town" />
         </div>
       </div>
-      <div class="create-offer-title">
-        <h2>Contact person</h2>
+      <div>
+
+        <div class="create-offer-title">
+          <h2>Contact person</h2>
+        </div>
       </div>
       <div class="create-offer-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoContPersonName }">
-            <span :class="{ invalidLabel: validations.isNoContPersonName }" class="asterix">*</span>Name</label>
+          <label :class="{ 'invalid-label': validations.isNoContPersonName }">
+            <span :class="{ 'invalid-label': validations.isNoContPersonName }" class="asterix">*</span>Name</label>
           <input :class="{ invalid: validations.isNoContPersonName }" class="create-offer-input" v-model="contPersonName" placeholder="Name" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoContPersonSurname }">
-            <span :class="{ invalidLabel: validations.isNoContPersonSurname }" class="asterix">*</span>Surname</label>
+          <label :class="{ 'invalid-label': validations.isNoContPersonSurname }">
+            <span :class="{ 'invalid-label': validations.isNoContPersonSurname }" class="asterix">*</span>Surname</label>
           <input :class="{ invalid: validations.isNoContPersonSurname }" class="create-offer-input" v-model="contPersonSurname" placeholder="Surname" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoPhoneNumber }">
-            <span :class="{ invalidLabel: validations.isNoPhoneNumber }" class="asterix">*</span>Phone number</label>
+          <label :class="{ 'invalid-label': validations.isNoPhoneNumber }">
+            <span :class="{ 'invalid-label': validations.isNoPhoneNumber }" class="asterix">*</span>Phone number</label>
           <input :class="{ invalid: validations.isNoPhoneNumber }" class="create-offer-input" v-model="phoneNumber" placeholder="Phone number" />
         </div>
       </div>
@@ -63,13 +67,13 @@
       </div>
       <div class="create-offer-row">
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoBidPrice }">
-            <span :class="{ invalidLabel: validations.isNoBidPrice }" class="asterix">*</span>Bid price</label>
+          <label :class="{ 'invalid-label': validations.isNoBidPrice }">
+            <span :class="{ 'invalid-label': validations.isNoBidPrice }" class="asterix">*</span>Bid price</label>
           <input :class="{ invalid: validations.isNoBidPrice }" class="create-offer-input" type="number" v-model="bidPrice" placeholder="Bid Price" />
         </div>
         <div class="input-container">
-          <label :class="{ invalidLabel: validations.isNoCurrencyId }">
-            <span :class="{ invalidLabel: validations.isNoCurrencyId }" class="asterix">*</span>Currency</label>
+          <label :class="{ 'invalid-label': validations.isNoCurrencyId }">
+            <span :class="{ 'invalid-label': validations.isNoCurrencyId }" class="asterix">*</span>Currency</label>
           <select :class="{ invalid: validations.isNoCurrencyId }" v-model="currencyId">
             <option :value="null">Select</option>
             <option v-for="currency in currencies" :key="currency" :value="currency.currencyId">{{currency.name}}</option>
@@ -79,14 +83,15 @@
       <div class="create-tender-title"><h2>Documents</h2></div>
 
       <div class="file-upload-container">
-        <label :class="{ invalidLabel: validations.isNoOfferFileKey }" class="file-upload-label">
-          <span :class="{ invalidLabel: validations.isNoOfferFileKey }" class="asterix">*</span>Contract</label>
+        <label :class="{ 'invalid-label': validations.isNoOfferFileKey }" class="file-upload-label">
+          <span :class="{ 'invalid-label': validations.isNoOfferFileKey }" class="asterix">*</span>Contract</label>
         <input :class="{ invalid: validations.isNoOfferFileKey }" class="upload-input" type="file" @change="uploadOfferFile" ref="offerFile" placeholder="Contract" accept=".pdf">
         <input type="button" class="upload-button rcorners1" @click="submitFile(this.offerFile)" value="Submit">
+        <v-icon class="button-icon" v-if="isFileSubmitted" icon="fa fa-check"></v-icon>
       </div>
     </div>
-    <button class="rcorners1 cancel-button" @click="cancelOffer">Cancel</button>
-    <button class="rcorners1 publish-button" @click="publishOffer">Publish</button>
+    <button class="rcorners1 button" @click="cancelOffer"  style="background-color: #ffffff;color: #27aae1; border-color: #27aae1; ">Cancel</button>
+    <button class="rcorners1 button" @click="publishOffer">Publish</button>
   </div>
 </template>
 
@@ -113,7 +118,8 @@ export default {
       bidPrice: null,
       currencyId: null,
       offerFileKey: null,
-      offerFile: null
+      offerFile: null,
+      isFileSubmitted: false,
     }
   },
   async beforeMount() {
@@ -147,6 +153,7 @@ export default {
   methods: {
     uploadOfferFile() {
       this.offerFile = this.$refs.offerFile.files[0];
+      this.isFileSubmitted = false;
     },
     publishOffer() {
       if(!this.natRegNumber
@@ -219,6 +226,7 @@ export default {
                 }
             ).then((response)=>{
           this.offerFileKey = response;
+          this.isFileSubmitted = !!this.offerFileKey;
         })
       }
     },
@@ -233,6 +241,14 @@ export default {
 
 <style scoped>
 @import "@/styles/main.css";
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #252728;
+  margin: 1em 0;
+  padding: 0;
+}
 
 label {
   margin-bottom: .3rem !important;
@@ -248,18 +264,23 @@ label {
 input {
   display:flex;
 }
-h2{
+
+h2 {
+  overflow: hidden;
+  position: relative;
   color: #444a4f;
+  margin-top: 2rem;
+}
+h2::after {
+  content: '';
+  width: 100%;
+  height: .1rem;
+  background: #eee8e8;
+  position: absolute;
+  top: 50%;
+  margin-left: 1rem;
 }
 
-.offer-form-header-container {
-  height: 10.68rem;
-  max-width: 101.2%;
-  margin-left: -0.5rem;
-  margin-top: 5.125rem;
-  border-color: #ffffff;
-  background-color: #27aae1;
-}
 .offer-form-title {
   font-size: 1.363rem;
   color: #ffffff;

@@ -1,13 +1,16 @@
 <template>
-  <div v-if="!!offerExternal" class="form-header-container">
+  <div v-if="!!offerExternal" class="header-container">
 
   </div>
   <div :class="{ 'offer-desc-form': !!offerExternal }">
     <div v-if="!!offerExternal" style="margin-bottom: 3rem;" class="description-main-title">
       <h1>{{!!this.tender.cpv ? this.tender.cpv.field : ""}} ({{!!this.tender.cpv ? this.tender.cpv.name : ""}}) </h1>
     </div >
-    <div class="blank-table" v-if="!offer">
+    <div class="blank-table" v-if="!offer && tender && tender['tenderStatus'].id === 1">
       <div class="no-offers"> <button class="rcorners1 create-offer" @click="createOffer">Create Offer</button></div>
+    </div>
+    <div class="blank-table" v-if="!offer && tender && tender['tenderStatus'].id !== 1">
+      <div class="no-offers"> Tender is Closed</div>
     </div>
     <div v-if="!!offer" class="description-form">
       <div class="description-main-row">
@@ -78,14 +81,26 @@
             <a class="description-file-link" target="_blank" type="button"  @click="downloadFile(offer.offerFileKey)">offer document.pdf</a>
           </div>
         </div>
-      <button v-if="!!offer && (!offer.offerStatus || offer.offerStatus.id === 1) && offerExternal"
-              class="rcorners1 publish-button" @click="sendDecision(2)">Send Award Decision</button>
-      <button v-if="!!offer && (!offer.offerStatus || offer.offerStatus.id === 1) && offerExternal"
-              class="rcorners1 cancel-button" @click="sendDecision(5)">Send Rejection Decision</button>
-      <button v-if="!!offer && (!offer.offerStatus || offer.offerStatus.id === 2) && !offerExternal"
-              class="rcorners1 publish-button" @click="sendDecision(3)">Approve Contract</button>
-      <button v-if="!!offer && (!offer.offerStatus || offer.offerStatus.id === 2) && !offerExternal"
-              class="rcorners1 cancel-button" @click="sendDecision(4)">Decline Contract</button>
+        <div v-if="isOfferDeclined()" class="description-row">
+          <div class="description-download-value">
+            <v-icon class="file-decline-icon file-icon"  icon="fa fa-file-contract" />
+            <a class="description-file-link file-decline-icon" target="_blank" type="button"  @click="getKeyAndDownload">reject_decision.pdf</a>
+          </div>
+        </div>
+        <div v-if="isOfferChosen()" class="description-row">
+          <div class="description-download-value">
+            <v-icon class="file-award-icon file-icon"  icon="fa fa-file-contract" />
+            <a class="description-file-link file-award-icon" target="_blank" type="button"  @click="getKeyAndDownload">award_decision.pdf</a>
+          </div>
+        </div>
+        <button v-if="!!offer && (!offer.offerStatus || offer.offerStatus.id === 1) && offerExternal"
+                class="rcorners1 publish-button" @click="sendDecision(2)">Send Award Decision</button>
+        <button v-if="!!offer && (!offer.offerStatus || offer.offerStatus.id === 1) && offerExternal"
+                class="rcorners1 cancel-button" @click="sendDecision(5)">Send Rejection Decision</button>
+        <button v-if="!!offer && (offer.offerStatus && offer.offerStatus.id === 2) && !offerExternal"
+                class="rcorners1 publish-button" @click="sendDecision(3)">Approve Contract</button>
+        <button v-if="!!offer && (offer.offerStatus && offer.offerStatus.id === 2) && !offerExternal"
+                class="rcorners1 cancel-button" @click="sendDecision(4)">Decline Contract</button>
     </div>
   </div>
 </template>
@@ -153,8 +168,29 @@ export default {
         });
   },
   methods:{
+    isOfferChosen(){
+      return !!this.offer && !this.offerExternal && this.offer.offerStatus && (this.offer.offerStatus.id === 2 || this.offer.offerStatus.id === 3)
+    },
+    isOfferDeclined(){
+      return !!this.offer && !this.offerExternal && (((!this.offer.offerStatus || this.offer.offerStatus.id === 1) && this.tender.tenderStatus.id !==1)
+          || (this.offer.offerStatus && this.offer.offerStatus.id === 5))
+    },
     createOffer() {
       this.$emit("createOfferOpen", true);
+    },
+    getKeyAndDownload(){
+      fetch(API_BASE_URL+'/offers/'+this.offer.id+'/decisionFileKey', {
+        headers: getAuthenticatedHeaders()
+      })
+          .then( response => {
+            if (response.ok) {
+              return response.text()
+            } else if (response.status === 401 || response.status === 403) {
+              logout();
+            }
+          }).then(resp=>{
+            this.downloadFile(resp)
+      });
     },
     downloadFile(key){
       const url =API_BASE_URL+'/download/'+key
@@ -182,17 +218,13 @@ export default {
       }
       return !!currency ? currency.name : "";
     },
-    formatDate(miliseconds) {
-      if(!!miliseconds){
-        let d = new Date(miliseconds);
-        return formatDate(d);
-      }
-    },
+
     sendDecision(id){
       fetch(API_BASE_URL+'/offers/'+this.offer.id, {
         method: 'PATCH',
         body: JSON.stringify({
               "statusId": +id,
+              "tenderId": +this.offer.tenderId,
             }
         ),
         headers: {

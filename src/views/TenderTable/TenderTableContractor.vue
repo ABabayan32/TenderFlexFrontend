@@ -1,6 +1,6 @@
 <template>
 
-  <div class="table-header-container"></div>
+  <div class="header-container"></div>
   <div class="tender-table">
     <div class="table-title">
       <h1> My Tenders</h1>
@@ -33,17 +33,15 @@
         <td class="column-medium" style="color: #068ac2"><a @click="onTenderFieldClick(tender)" type="button" >
           {{tender['cpv'] ? tender['cpv']['name']+'/'+tender['cpv']['field'] : ''}}</a></td>
         <td class="column-medium">{{tender['name']}}</td>
-        <td class="column-medium" style="color: #6de165">{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
-        <td class="column-small">{{tender['deadForSinging'] ? formatDate(tender['deadForSinging']) : ""}}</td>
+        <td class="column-medium" :class="{'status-green': tender['tenderStatus'] && tender['tenderStatus'].id ===1}">{{tender['tenderStatus'] ? tender['tenderStatus'].name : ''}}</td>
+        <td class="column-small">{{tender['deadForSinging'] ? formatTenderDate(tender['deadForSinging']) : ""}}</td>
         <td class="column-small" style="width: 10%"><button @click="onTenderOffersClick(tender)"
                                                                           class="offer-button rcorners1" type="button" >
           {{responseDate(tender, offers)}}</button></td>
       </tr>
       </tbody>
     </table>
-    <div>
-      <v-pagination
-
+      <v-pagination  v-if="tenders.length !== 0"
           :disabled = "tenders.length === 0"
           v-model="page"
           :length="pageCount"
@@ -54,12 +52,11 @@
           prev-icon="fa fa-angle-left"
           :size="count"
           @update:modelValue="pageChange()"/>
-    </div>
-    <div class="blank-table" v-if="tenders.length ===0">
-      <div class="no-tenders">There are no Tenders</div>
-    </div>
-  </div>
 
+  </div>
+  <div class="blank-table blank-table-width" v-if="tenders.length ===0">
+    <div class="no-tenders">There are no Tenders</div>
+  </div>
 </template>
 
 <script>
@@ -194,7 +191,7 @@ export default {
     onTenderFieldClick(tender) {
       this.$emit("desOfTender", tender);
     },
-    formatDate(date){
+    formatTenderDate(date){
       return formatDate(date);
     }
 
@@ -223,15 +220,6 @@ export default {
   margin-top: -6.567rem;
   padding-left: 20%;
   max-width: 60%;
-}
-
-.table-header-container {
-  height: 10.6875rem;
-  max-width: 101.2%;
-  margin-left: -0.5rem;
-  margin-top: 5.125rem;
-  border-color: #ffffff;
-  background-color: #27aae1;
 }
 
 table  {
@@ -282,7 +270,9 @@ thead{
   margin: 0.25rem 0.125rem;
   cursor: pointer;
 }
-
+.status-green {
+  color: #6de165
+}
 
 
  </style>
